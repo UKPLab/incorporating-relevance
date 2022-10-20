@@ -11,7 +11,7 @@ This project is maintained by [Tim Baumgärtner](https://github.com/timbmg).
 
 ## Citation
 ```bibtex
-@inproceedings{Baumgartner2022IncorporatingRF,
+@inproceedings{baumgartner-etal-2022-incorporating,
   doi = {10.48550/ARXIV.2210.10695},
   url = {https://arxiv.org/abs/2210.10695},
   author = {Baumgärtner, Tim and Ribeiro, Leonardo F. R. and Reimers, Nils and Gurevych, Iryna},
