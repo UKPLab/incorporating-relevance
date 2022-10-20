@@ -1,0 +1,67 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Incorporating Relevance Feedback for
+  Information-Seeking Retrieval using Few-Shot
+  Document Re-Ranking
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Tim
+    family-names: Baumgärtner
+    email: baumgaertner.t@gmail.com
+    affiliation: TU Darmstadt
+  - given-names: 'Leonardo F. R. '
+    family-names: Ribeiro
+    affiliation: Amazon Alexa AI
+  - given-names: Nils
+    family-names: Reimers
+    affiliation: cohere.ai
+  - given-names: Iryna
+    family-names: Gurevych
+    affiliation: TU Darmstadt
+abstract: >-
+  Pairing a lexical retriever with a neural
+  re-ranking model has set state-of-the-art
+  performance on large-scale information retrieval
+  datasets. This pipeline covers scenarios like
+  question answering or navigational queries,
+  however, for information-seeking scenarios, users
+  often provide information on whether a document is
+  relevant to their query in form of clicks or
+  explicit feedback. Therefore, in this work, we
+  explore how relevance feedback can be directly
+  integrated into neural re-ranking models by
+  adopting few-shot and parameter-efficient learning
+  techniques. Specifically, we introduce a kNN
+  approach that re-ranks documents based on their
+  similarity with the query and the documents the
+  user considers relevant. Further, we explore
+  Cross-Encoder models that we pre-train using
+  meta-learning and subsequently fine-tune for each
+  query, training only on the feedback documents. To
+  evaluate our different integration strategies, we
+  transform four existing information retrieval
+  datasets into the relevance feedback scenario.
+  Extensive experiments demonstrate that integrating
+  relevance feedback directly in neural re-ranking
+  models improves their performance, and fusing
+  lexical ranking with our best performing neural
+  re-ranker outperforms all other methods by 5.2
+  nDCG@20.
+preferred-citation:
+  type: inproceedings
+  authors:
+  - given-names: Tim
+    family-names: Baumgärtner
+    email: baumgaertner.t@gmail.com
+  - given-names: 'Leonardo F. R. '
+    family-names: Ribeiro
+  - given-names: Nils
+    family-names: Reimers
+  - given-names: Iryna
+    family-names: Gurevych
