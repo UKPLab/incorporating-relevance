@@ -65,3 +65,9 @@ preferred-citation:
     family-names: Reimers
   - given-names: Iryna
     family-names: Gurevych
+  title: >-
+    Incorporating Relevance Feedback for
+    Information-Seeking Retrieval using Few-Shot
+    Document Re-Ranking
+  year: 2022
+  url: https://arxiv.org/abs/2210.10695
