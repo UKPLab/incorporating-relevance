@@ -10,6 +10,7 @@ This project is maintained by [Tim Baumgärtner](https://github.com/timbmg).
 - [TU Darmstadt](http://www.tu-darmstadt.de/)
 
 ## Citation
+If you find this work useful, please considering citing the following paper: [https://arxiv.org/abs/2210.10695](https://arxiv.org/abs/2210.10695)
 ```bibtex
 @inproceedings{baumgartner-etal-2022-incorporating,
   doi = {10.48550/ARXIV.2210.10695},
