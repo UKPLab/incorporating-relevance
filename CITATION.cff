@@ -53,8 +53,9 @@ abstract: >-
   lexical ranking with our best performing neural
   re-ranker outperforms all other methods by 5.2
   nDCG@20.
+repository-code: https://github.com/UKPLab/incorporating-relevance
 preferred-citation:
-  type: inproceedings
+  type: proceedings
   authors:
   - given-names: Tim
     family-names: Baumgärtner
