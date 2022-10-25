@@ -1,0 +1,4 @@
+pydantic[dotenv]
+requests
+tqdm
+ir_datasets==0.4.0
