@@ -58,10 +58,7 @@ def untar_gzip(file_path: str, output_dir: str) -> None:
     """Untar a gzip file."""
     with tarfile.open(file_path, "r:gz") as tar:
         for name in tar.getnames():
-            if os.path.exists(os.path.join(output_dir, name)):
-                print(f"File already exists: {name}")
-            else:
-                print(f"Extracting: {name}")
+            if not os.path.exists(os.path.join(output_dir, name)):
                 tar.extract(name, path=output_dir)
 
 
