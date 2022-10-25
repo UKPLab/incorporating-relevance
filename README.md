@@ -2,6 +2,9 @@
 
 🚧 🚧 🚧 Code under construction 🚧 🚧 🚧 
 
+## Requirements
+- python (tested with v3.8.2)
+- docker (for elasticsearch)
 ## Setup
 1. Setup your python virtual environment, for example:
     ```shell
