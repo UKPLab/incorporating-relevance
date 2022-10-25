@@ -54,26 +54,15 @@ def download_file(
     return file_path
 
 
-def stip_extension(p: str) -> str:
-    """Strip extension from a file path. Even with double extensions like .tar.gz."""
-    p = os.path.basename(p)
-    p = os.path.splitext(p)
-    print(p, isinstance(p, tuple))
-    while isinstance(p, tuple) and len(p[1]):
-        p = p[0]
-        p = os.path.splitext(p)
-    return p[0]
-
-
 def untar_gzip(file_path: str, output_dir: str) -> None:
     """Untar a gzip file."""
-    p, f = os.path.dirname(file_path), os.path.basename(file_path)
-    f = stip_extension(f)
-    if not os.path.exists(os.path.join(output_dir, f)):
-        with tarfile.open(file_path, "r:gz") as tar:
-            tar.extractall(output_dir)
-    else:
-        print(f"File already extracted: {os.path.join(output_dir, f)}")
+    with tarfile.open(file_path, "r:gz") as tar:
+        for name in tar.getnames():
+            if os.path.exists(os.path.join(output_dir, name)):
+                print(f"File already exists: {name}")
+            else:
+                print(f"Extracting: {name}")
+                tar.extract(name, path=output_dir)
 
 
 # Setup data dir
