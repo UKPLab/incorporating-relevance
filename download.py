@@ -16,6 +16,8 @@ from settings import (
     WebisTouche2020DatasetSettings,
 )
 
+UNSET_USERNAME = "<NONE>"
+
 
 def download_file(
     url: str,
@@ -99,35 +101,43 @@ ir_datasets.load(webis_touche_2020_settings.ir_datasets_name)
 
 # Download TREC-Robust
 trec_robust_settings = TRECRobustDatasetSettings()
-trec_robust_data_path = os.path.join(settings.data_path, trec_robust_settings.data_path)
-os.makedirs(trec_robust_data_path, exist_ok=True)
-out_file = download_file(
-    trec_robust_settings.corpus_disk4_url,
-    trec_robust_data_path,
-    trec_robust_settings.username,
-    trec_robust_settings.password.get_secret_value(),
-    pbar_desc="trec-robust/corpus-disk4",
-)
-untar_gzip(out_file, trec_robust_data_path)
+if trec_robust_settings.username == UNSET_USERNAME:
+    print("Skipping TREC-Robust download. Get credentials from TREC for this dataset.")
+else:
+    trec_robust_data_path = os.path.join(
+        settings.data_path, trec_robust_settings.data_path
+    )
+    os.makedirs(trec_robust_data_path, exist_ok=True)
+    out_file = download_file(
+        trec_robust_settings.corpus_disk4_url,
+        trec_robust_data_path,
+        trec_robust_settings.username,
+        trec_robust_settings.password.get_secret_value(),
+        pbar_desc="trec-robust/corpus-disk4",
+    )
+    untar_gzip(out_file, trec_robust_data_path)
 
-out_file = download_file(
-    trec_robust_settings.corpus_disk5_url,
-    trec_robust_data_path,
-    trec_robust_settings.username,
-    trec_robust_settings.password.get_secret_value(),
-    pbar_desc="trec-robust/corpus-disk5",
-)
-untar_gzip(out_file, trec_robust_data_path)
+    out_file = download_file(
+        trec_robust_settings.corpus_disk5_url,
+        trec_robust_data_path,
+        trec_robust_settings.username,
+        trec_robust_settings.password.get_secret_value(),
+        pbar_desc="trec-robust/corpus-disk5",
+    )
+    untar_gzip(out_file, trec_robust_data_path)
 
 # Download TREC-News
 trec_news_settings = TRECNewsDatasetSettings()
-trec_news_data_path = os.path.join(settings.data_path, trec_news_settings.data_path)
-os.makedirs(trec_news_data_path, exist_ok=True)
-out_file = download_file(
-    trec_news_settings.corpus_url,
-    trec_news_data_path,
-    trec_news_settings.username,
-    trec_news_settings.password.get_secret_value(),
-    pbar_desc="trec-news/corpus",
-)
-untar_gzip(out_file, trec_news_data_path)
+if trec_news_settings.username == UNSET_USERNAME:
+    print("Skipping TREC-News download. Get credentials from TREC for this dataset.")
+else:
+    trec_news_data_path = os.path.join(settings.data_path, trec_news_settings.data_path)
+    os.makedirs(trec_news_data_path, exist_ok=True)
+    out_file = download_file(
+        trec_news_settings.corpus_url,
+        trec_news_data_path,
+        trec_news_settings.username,
+        trec_news_settings.password.get_secret_value(),
+        pbar_desc="trec-news/corpus",
+    )
+    untar_gzip(out_file, trec_news_data_path)
