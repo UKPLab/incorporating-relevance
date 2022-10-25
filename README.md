@@ -32,7 +32,8 @@
 
 ## Contact
 This project is maintained by [Tim Baumgärtner](https://github.com/timbmg).
-- Tim Baumgärtner [mail](mailto:baumgaertner.t@gmail.com) [github](https://github.com/timbmg) [twitter](https://twitter.com/timbmg) 
+- [Mail](mailto:baumgaertner.t@gmail.com) 
+- [Twitter](https://twitter.com/timbmg) 
 - [UKP Lab](http://www.ukp.tu-darmstadt.de/)
 - [TU Darmstadt](http://www.tu-darmstadt.de/)
 
