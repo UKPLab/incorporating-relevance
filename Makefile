@@ -5,7 +5,7 @@ all : install install-dev format download index
 
 install:
 	pip install --upgrade pip
-	pip install -r requirements
+	pip install -r requirements.txt
 
 install-dev:
 	pip install --upgrade pip
