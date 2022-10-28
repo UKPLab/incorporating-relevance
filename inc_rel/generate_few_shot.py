@@ -7,6 +7,7 @@ from pathlib import Path
 
 from tqdm.auto import tqdm
 
+import eval
 import utils
 from settings import dataset_settings_cls
 from datasets import datasets_cls
