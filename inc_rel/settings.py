@@ -8,14 +8,24 @@ class Settings(BaseSettings):
         env_file = ".env"
         env_prefix = "INC_REL_"
 
-    data_path: str
+    ir_datasets_home: str = Field("~/.ir_datasets", env="IR_DATASETS_HOME")
+
+    base_path: str
+    raw_dir: str
+    data_dir: str
+
+    @property
+    def raw_path(self) -> str:
+        return os.path.join(self.base_path, self.raw_dir)
+
+    @property
+    def data_path(self) -> str:
+        return os.path.join(self.base_path, self.data_dir)
 
 
 class DatasetSettings(BaseSettings):
 
-    base_path: str = Field(..., env="INC_REL_DATASET_BASE_PATH")
-
-    seeds: List[int] = Field(
+    split_seeds: List[int] = Field(
         [0, 1, 2], description="Random seeds for splitting the dataset."
     )
     split_sizes: List[float] = Field(
@@ -25,12 +35,26 @@ class DatasetSettings(BaseSettings):
         [2, 4, 8], description="Amount of relevance feedback per topic (k)."
     )
     bm25_size: int = Field(
-        1000, description="Amount of documents to retrieve with BM25."
+        1000,
+        description="Number of documents to retrieve in the first stage with BM25.",
     )
     remove_duplicates: bool = Field(False, description="Remove duplicate documents.")
     enrich_bm25_path: str = Field(
         None, description="If provided, use negatives from BM25."
     )
+
+    @property
+    def corpus_path(self) -> str:
+        # datasets managed by ir_datasets do not have a corpus_path
+        return "not implemented"
+
+    @property
+    def topics_path(self) -> str:
+        return "not implemented"
+
+    @property
+    def qrels_path(self) -> str:
+        return "not implemented"
 
 
 class TRECCovidDatasetSettings(DatasetSettings):
@@ -39,6 +63,7 @@ class TRECCovidDatasetSettings(DatasetSettings):
         env_prefix = "INC_REL_TREC_COVID_"
 
     name: str = "trec-covid"
+    raw_path: str
     data_path: str
     corpus_url: str
     topics_url: str
@@ -48,17 +73,15 @@ class TRECCovidDatasetSettings(DatasetSettings):
 
     @property
     def corpus_path(self) -> str:
-        return os.path.join(
-            self.base_path, self.data_path, "2020-07-16", "metadata.csv"
-        )
+        return os.path.join(self.raw_path, "2020-07-16", "metadata.csv")
 
     @property
     def topics_path(self) -> str:
-        return os.path.join(self.base_path, self.data_path, "topics-rnd5.xml")
+        return os.path.join(self.raw_path, "topics-rnd5.xml")
 
     @property
     def qrels_path(self) -> str:
-        return os.path.join(self.base_path, self.data_path, "qrels-covid_d5_j0.5-5.txt")
+        return os.path.join(self.raw_path, "qrels-covid_d5_j0.5-5.txt")
 
 
 class WebisTouche2020DatasetSettings(DatasetSettings):
@@ -75,7 +98,8 @@ class TRECRobustDatasetSettings(DatasetSettings):
         env_file = ".env"
         env_prefix = "INC_REL_TREC_ROBUST_"
 
-    name: str = "robust"
+    name: str = "robust04"
+    raw_path: str
     data_path: str
     username: str
     password: SecretStr
@@ -89,15 +113,25 @@ class TRECNewsDatasetSettings(DatasetSettings):
         env_prefix = "INC_REL_TREC_NEWS_"
 
     name: str = "trec-news"
+    raw_path: str
     data_path: str
     username: str
     password: SecretStr
     corpus_url: str
 
+    @property
+    def corpus_path(self) -> str:
+        return os.path.join(
+            self.raw_path,
+            "WashingtonPost.v2",
+            "data",
+            "TREC_Washington_Post_collection.v2.jl",
+        )
+
 
 dataset_settings_cls = {
     "trec-covid": TRECCovidDatasetSettings,
-    "trec-robust": TRECRobustDatasetSettings,
+    "robust04": TRECRobustDatasetSettings,
     "trec-news": TRECNewsDatasetSettings,
-    "webis-touche-2020": WebisTouche2020DatasetSettings,
+    "touche": WebisTouche2020DatasetSettings,
 }
