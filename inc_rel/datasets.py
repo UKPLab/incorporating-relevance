@@ -160,6 +160,7 @@ class TrecNews(Dataset):
             self.corpus(doc_ids=list(docid2num.keys()), verbose=False),
             desc="extracting titles",
             total=len(docid2num),
+            ncols=100,
         ):
             num = docid2num[doc["id"]]
             topics[num] = doc["title"]
@@ -179,7 +180,7 @@ class TrecNews(Dataset):
             if doc_ids is not None:
                 doc_ids = list(set(doc_ids))
             with open(corpus_path) as fh:
-                for line in tqdm(fh, total=595037, disable=not verbose):
+                for line in tqdm(fh, total=595037, disable=not verbose, ncols=100):
                     doc = json.loads(line)
                     if doc_ids is None or doc["id"] in doc_ids:
                         full_text = []
@@ -233,7 +234,9 @@ class Robust04(Dataset):
 
     def read_corpus(self, *args, **kwargs) -> Dict[str, str]:
         corpus = {}
-        for doc in tqdm(self.dataset.docs_iter(), total=528155, desc="loading dataset"):
+        for doc in tqdm(
+            self.dataset.docs_iter(), total=528155, desc="loading dataset", ncols=100
+        ):
             corpus[doc.doc_id] = doc.text
         return corpus
 
@@ -259,7 +262,9 @@ class Touche(Dataset):
 
     def read_corpus(self, *args, **kwargs) -> Dict[str, str]:
         corpus = {}
-        for doc in tqdm(self.dataset.docs_iter(), total=382545, desc="loading dataset"):
+        for doc in tqdm(
+            self.dataset.docs_iter(), total=382545, desc="loading dataset", ncols=100
+        ):
             corpus[doc.doc_id] = doc.text
         return corpus
 
