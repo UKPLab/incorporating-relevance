@@ -6,6 +6,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from tqdm.auto import tqdm
+from pydantic import SecretStr
 
 import eval
 import utils
@@ -51,7 +52,7 @@ def main(args):
         num_non_relevant=max_k,
     )
 
-    dataset_path = args.output_path / args.name / str(args.bm25_size)
+    dataset_path = os.path.join(args.data_path, str(args.bm25_size))
     os.makedirs(dataset_path, exist_ok=True)
 
     # check if each topic has enough candidates in the bm25 results
@@ -108,7 +109,7 @@ def main(args):
                             }
                         )
     for k, annotation in annotations.items():
-        with open(dataset_path / f"annotations_{k}.json", "w") as fh:
+        with open(os.path.join(dataset_path, f"annotations_{k}.json"), "w") as fh:
             json.dump(annotation, fh, indent=4)
 
     dataset.remove_annotations_from_qrels(annotations[max_k])
@@ -143,7 +144,7 @@ def main(args):
             "bm25_topics2time",
         ],
     ):
-        with open(dataset_path / f"{name}.json", "w") as fh:
+        with open(os.path.join(dataset_path, f"{name}.json"), "w") as fh:
             json.dump(obj, fh, indent=4)
 
     for k in args.num_samples:
@@ -193,18 +194,20 @@ def main(args):
             )
             expan_acc[mlt_key] = eval.accumulate_bm25_results(expan_eval[mlt_key])
 
-        sample_path = args.output_path / args.name / str(args.bm25_size) / f"k{k}"
+        sample_path = os.path.join(args.data_path, str(args.bm25_size), f"k{k}")
         os.makedirs(sample_path)
         for key in expan_results.keys():
             for name, obj in zip(
                 ["results", "docs", "eval", "eval_acc", "times"],
                 [expan_results, expan_docs, expan_eval, expan_acc, expan_topic2time],
             ):
-                with open(sample_path / f"expansion_{name}_{key}.json", "w") as fh:
+                with open(
+                    os.path.join(sample_path, f"expansion_{name}_{key}.json"), "w"
+                ) as fh:
                     json.dump(obj[key], fh, indent=4)
 
         for split_seed in args.split_seeds:
-            split_path = sample_path / f"s{str(split_seed)}"
+            split_path = os.path.join(sample_path, f"s{str(split_seed)}")
             os.makedirs(split_path)
 
             train_topics, valid_topics, test_topics = utils.create_split(
@@ -237,7 +240,9 @@ def main(args):
                     )
 
                 for split_name, split in splits.items():
-                    with open(split_path / f"{split_name}.json", "w") as fh:
+                    with open(
+                        os.path.join(split_path, f"{split_name}.json"), "w"
+                    ) as fh:
                         json.dump(split, fh, indent=4)
 
                 for key in split_eval.keys():
@@ -245,7 +250,9 @@ def main(args):
                         file_name = f"{split_name}_{key[0]}"
                     else:
                         file_name = f"{split_name}_expansion_{key[0]}"
-                    with open(split_path / f"{file_name}_eval_acc.json", "w") as fh:
+                    with open(
+                        os.path.join(split_path, f"{file_name}_eval_acc.json"), "w"
+                    ) as fh:
                         json.dump(split_eval[key], fh, indent=4)
 
             config = vars(args)
@@ -256,8 +263,9 @@ def main(args):
             config = {
                 config_k: str(v) if isinstance(v, Path) else v
                 for config_k, v in config.items()
+                if not isinstance(v, SecretStr)
             }
-            with open(split_path / "config.json", "w") as fh:
+            with open(os.path.join(split_path, "config.json"), "w") as fh:
                 json.dump(config, fh, indent=4)
 
 
@@ -265,6 +273,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dataset", type=str, required=True)
     args = parser.parse_args()
+    print(args)
 
     dataset_settings = dataset_settings_cls[args.dataset]()
 
