@@ -1,10 +1,9 @@
 import json
 import os
-from pathlib import Path
 from typing import Dict, List
 
 import numpy as np
-from simple_parsing import ArgumentParser
+import simple_parsing
 from sentence_transformers import util
 from tqdm.auto import tqdm
 
@@ -100,10 +99,5 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_arguments(KNNSimilarities, "args")
-    args = parser.parse_args()
-    args = args.args
-
-    print(args)
+    args = simple_parsing.parse(KNNSimilarities)
     main(args)

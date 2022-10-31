@@ -3,8 +3,8 @@ import os
 from typing import Dict, List
 
 import torch
+import simple_parsing
 from sentence_transformers import SentenceTransformer
-from simple_parsing import ArgumentParser
 
 from args import KNNIndex
 
@@ -61,12 +61,5 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_arguments(KNNIndex, "args")
-    args = parser.parse_args()
-    args = args.args
-    print(args)
-    import pdb
-
-    pdb.set_trace()
-    # main(args)
+    args = simple_parsing.parse(KNNIndex)
+    main(args)

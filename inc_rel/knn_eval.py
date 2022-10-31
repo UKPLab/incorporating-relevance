@@ -5,7 +5,7 @@ import operator
 from collections import defaultdict
 from typing import Dict, List
 
-from simple_parsing import ArgumentParser
+import simple_parsing
 
 import eval
 from args import Experiment
@@ -203,9 +203,5 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_arguments(Experiment, dest="args")
-    args = parser.parse_args()
-    args = args.args
-    print(args)
+    args = simple_parsing.parse(Experiment)
     main(args)

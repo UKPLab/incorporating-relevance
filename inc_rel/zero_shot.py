@@ -1,8 +1,8 @@
 import json
 import os
 
+import simple_parsing
 from sentence_transformers import CrossEncoder, SentenceTransformer
-from simple_parsing import ArgumentParser
 
 from args import ZeroShot
 from eval import accumulate_results
@@ -111,8 +111,5 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_arguments(ZeroShot, "args")
-    args = parser.parse_args()
-    args = args.args
+    args = simple_parsing.parse(ZeroShot)
     main(args)
