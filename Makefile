@@ -3,27 +3,27 @@ include .env
 .PHONY: install install-dev format download index first-stage zero-shot knn query-fine-tune meta-query-fine-tune rank-fusion help
 .DEFAULT_GOAL := help
 
-## Install dependencies. Note: Activate virtualenv before running this command.
+## 		Install dependencies. Note: Activate virtualenv before running this command.
 install:
 	pip install --upgrade pip
 	pip install -r requirements.txt
 
-## Install development dependencies. Note: Activate virtualenv before running this command.
+## 		Install development dependencies. Note: Activate virtualenv before running this command.
 install-dev: 
 	pip install --upgrade pip
 	pip install -r requirements.dev.txt
 	pre-commit install
 
-## Format code base
+## 		Format code base.
 format: 
 	black .
 	
-## Download datasets according to the configuration in .env
+## 		Download datasets according to the configuration in .env.
 download: 
 	@echo env-file=$(env-file)
 	python inc_rel/download.py --env-file $(env-file)
 
-## Get first stage retrieval results using BM25
+## 		Get first stage retrieval results using BM25.
 first-stage:
 	@echo dataset=$(dataset)
 	docker run -d \
@@ -37,7 +37,7 @@ first-stage:
 	python inc_rel/first_stage.py --dataset $(dataset)
 	docker rm -s inc-rel-es
 
-## Create an elasticsearch index; perform first and second stage retrieval and generate the few-shot dataset
+## 		Create an elasticsearch index; perform first and second stage retrieval and generate the few-shot dataset.
 index: 
 	@echo dataset=$(dataset)
 	docker run -d \
@@ -53,17 +53,26 @@ index:
 
 	# docker rm -s inc-rel-es
 
-## evaluate zero-shot re-ranking
+## 		Evaluate zero-shot re-ranking.
 zero-shot: 
-	@echo dataset=$(dataset)
-	@echo num-samples=$(num-samples)
-	python inc_rel/zero_shot.py --dataset $(dataset) --num-samples $(num-samples)
+	python inc_rel/zero_shot.py $(args)
 
-## evaluate knn re-ranking
-knn: 
-	@echo dataset=$(dataset)
+knn-index: 
+	@echo Creating KNN index
+	python inc_rel/knn_index.py $(args)
+knn-similarities: 
+	@echo Computing query-document similarities for dataset=$(dataset)
+	# python inc_rel/knn_similarities.py --dataset $(dataset)
+knn-eval: 
+	# @echo dataset=$(dataset)
+	@echo Evaluating KNN for dataset=$(dataset)
+	# python inc_rel/knn_eval.py --dataset $(dataset)
+knn: args:=$(args)
+## 			Evaluate knn re-ranking.
+knn: knn-index knn-similarities knn-eval
+	@echo args=$(args)
 
-## fine-tune the encoder per query on the few-shot examples
+## 	Fine-tune the encoder per query on the few-shot examples.
 query-fine-tune: 
 	@echo dataset=$(dataset)
 
@@ -79,6 +88,7 @@ YELLOW := $(shell tput -Txterm setaf 3)
 WHITE  := $(shell tput -Txterm setaf 7)
 RESET  := $(shell tput -Txterm sgr0)
 
+## 			Show this help.	
 help:
 	@echo ''
 	@echo 'Usage:'

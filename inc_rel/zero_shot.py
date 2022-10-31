@@ -1,34 +1,27 @@
-import argparse
 import json
 import os
 
 from sentence_transformers import CrossEncoder, SentenceTransformer
+from simple_parsing import ArgumentParser
 
+from args import ZeroShot
 from eval import accumulate_results
 from reranking_evaluator import RerankingEvaluator
-from settings import ZeroShotSettings, dataset_settings_cls
 
 
-def main(dataset_settings, zero_shot_settings, num_samples):
+def main(args):
 
-    data_path = os.path.join(
-        dataset_settings.data_path, str(dataset_settings.bm25_size)
-    )
-    base_path = os.path.join(data_path, f"k{num_samples}")
-    results_file = os.path.join(
-        base_path, f"expansion_results_{zero_shot_settings.rerank}.json"
-    )
-    docs_file = os.path.join(
-        base_path, f"expansion_docs_{zero_shot_settings.rerank}.json"
-    )
+    base_path = os.path.join(args.data_path, f"k{args.num_samples}")
+    results_file = os.path.join(base_path, f"expansion_results_16.json")
+    docs_file = os.path.join(base_path, f"expansion_docs_16.json")
 
     with open(results_file) as fh:
         bm25_results = json.load(fh)
     with open(docs_file) as fh:
         bm25_docs = json.load(fh)
-    with open(os.path.join(data_path, "qrels.json")) as fh:
+    with open(os.path.join(args.data_path, "qrels.json")) as fh:
         qrels = json.load(fh)
-    with open(os.path.join(data_path, "topics.json")) as fh:
+    with open(os.path.join(args.data_path, "topics.json")) as fh:
         topics = json.load(fh)
 
     assert len(topics) == len(qrels) == len(bm25_results), (
@@ -37,13 +30,13 @@ def main(dataset_settings, zero_shot_settings, num_samples):
         len(bm25_results),
     )
 
-    if zero_shot_settings.model_class == "ce":
+    if args.model_class == "ce":
         model_class = CrossEncoder
-    elif zero_shot_settings.model_class == "bi":
+    elif args.model_class == "bi":
         model_class = SentenceTransformer
-    model = model_class(zero_shot_settings.model)
-    if zero_shot_settings.model_ctx:
-        model_ctx = model_class(zero_shot_settings.model_ctx)
+    model = model_class(args.model)
+    if args.model_ctx is not None:
+        model_ctx = model_class(args.model_ctx)
     else:
         model_ctx = None
 
@@ -55,16 +48,16 @@ def main(dataset_settings, zero_shot_settings, num_samples):
         inital_ranking=bm25_results,
         batch_size=128,
         show_progress_bar=False,
-        scoring_fn=zero_shot_settings.scoring_fn,
+        scoring_fn=args.scoring_fn,
     )
 
     # assert len(eval_results) == len(qrels)
 
-    exp_name = f"{zero_shot_settings.prefix}_{zero_shot_settings.model_class}_{zero_shot_settings.rerank}"
+    exp_name = f"{args.prefix}_{args.model_class}"
     with open(
         os.path.join(
-            data_path,
-            f"k{num_samples}",
+            args.data_path,
+            f"k{args.num_samples}",
             f"zero_shot_{exp_name}_eval.json",
         ),
         "w",
@@ -72,8 +65,8 @@ def main(dataset_settings, zero_shot_settings, num_samples):
         json.dump(eval_results, fh, indent=4)
     with open(
         os.path.join(
-            data_path,
-            f"k{num_samples}",
+            args.data_path,
+            f"k{args.num_samples}",
             f"zero_shot_{exp_name}_eval_acc.json",
         ),
         "w",
@@ -81,20 +74,20 @@ def main(dataset_settings, zero_shot_settings, num_samples):
         json.dump(accumulate_results(eval_results), fh, indent=4)
     with open(
         os.path.join(
-            data_path,
-            f"k{num_samples}",
+            args.data_path,
+            f"k{args.num_samples}",
             f"zero_shot_{exp_name}_results.json",
         ),
         "w",
     ) as fh:
         json.dump(run, fh, indent=4)
 
-    for seed in zero_shot_settings.seeds:
+    for seed in args.seeds:
         for split in ["train", "valid", "test"]:
             with open(
                 os.path.join(
-                    data_path,
-                    f"k{num_samples}",
+                    args.data_path,
+                    f"k{args.num_samples}",
                     f"s{seed}",
                     f"{split}.json",
                 )
@@ -107,8 +100,8 @@ def main(dataset_settings, zero_shot_settings, num_samples):
 
             with open(
                 os.path.join(
-                    data_path,
-                    f"k{num_samples}",
+                    args.data_path,
+                    f"k{args.num_samples}",
                     f"s{seed}",
                     f"{split}_zero_shot_{exp_name}_eval_acc.json",
                 ),
@@ -118,12 +111,8 @@ def main(dataset_settings, zero_shot_settings, num_samples):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--dataset", type=str)
-    parser.add_argument("-k", "--num-samples", type=int)
-
+    parser = ArgumentParser()
+    parser.add_arguments(ZeroShot, "args")
     args = parser.parse_args()
-    dataset_settings = dataset_settings_cls[args.dataset]()
-    zero_shot_settings = ZeroShotSettings()
-
-    main(dataset_settings, zero_shot_settings, num_samples=args.num_samples)
+    args = args.args
+    main(args)

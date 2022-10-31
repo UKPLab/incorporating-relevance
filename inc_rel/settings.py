@@ -137,37 +137,6 @@ class TRECNewsDatasetSettings(DatasetSettings):
         )
 
 
-class ZeroShotSettings(BaseSettings):
-    prefix: str = Field("", description="Prefix for the output files.")
-    model: str = Field("cross-encoder/ms-marco-MiniLM-L-6-v2")
-    model_ctx: str = Field(
-        None,
-        description="The context model used for encoding the documents. If `None`, use `model`.",
-    )
-    scoring_fn: str = Field(
-        "cos",
-        description="The scoring function used if the model is a bi-encoder.",
-    )
-    seeds: List[int] = Field(
-        [0, 1, 2], description="Random seeds for the zero-shot query expansion."
-    )
-    rerank: str = Field(
-        "16",
-        description="The number of terms that have been extracted for the second stage retrieval.",
-    )
-    eval_batch_size: int = Field(
-        32, description="The batch size used for the evaluation."
-    )
-
-    @property
-    def model_class(self) -> str:
-        if self.model.startswith("cross-encoder"):
-            _model_class = "ce"
-        else:
-            _model_class = "bi"
-        return _model_class
-
-
 dataset_settings_cls = {
     "trec-covid": TRECCovidDatasetSettings,
     "robust04": TRECRobustDatasetSettings,
