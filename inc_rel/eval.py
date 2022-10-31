@@ -47,7 +47,7 @@ def eval_bm25(
     return results
 
 
-def accumulate_bm25_results(
+def accumulate_results(
     bm25_eval: Dict[str, Dict[str, float]], topic_ids: List[str] = None
 ) -> Dict[str, float]:
     acc_results = defaultdict(list)

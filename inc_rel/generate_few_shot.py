@@ -74,7 +74,7 @@ def main(args):
         index=args.name, topics=dataset.topics, size=args.bm25_size
     )
     bm25_eval = eval.eval_bm25(dataset.qrels, bm25_results)
-    bm25_eval_acc = eval.accumulate_bm25_results(bm25_eval)
+    bm25_eval_acc = eval.accumulate_results(bm25_eval)
 
     # find annotations
     for topic_id, query in dataset.topics.items():
@@ -118,7 +118,7 @@ def main(args):
     bm25_removed_eval = eval.eval_bm25(
         dataset.qrels, bm25_results, exclude_annotations=annotations[max_k]
     )
-    bm25_removed_eval_acc = eval.accumulate_bm25_results(bm25_removed_eval)
+    bm25_removed_eval_acc = eval.accumulate_results(bm25_removed_eval)
 
     for obj, name in zip(
         [
@@ -172,7 +172,7 @@ def main(args):
             qrels=dataset.qrels,
             run=expan_results[bm25_key],
         )
-        expan_acc[bm25_key] = eval.accumulate_bm25_results(expan_eval[bm25_key])
+        expan_acc[bm25_key] = eval.accumulate_results(expan_eval[bm25_key])
 
         for max_query_terms in [4, 8, 16, 32, 64]:
             mlt_key = max_query_terms
@@ -192,7 +192,7 @@ def main(args):
                 qrels=dataset.qrels,
                 run=expan_results[mlt_key],
             )
-            expan_acc[mlt_key] = eval.accumulate_bm25_results(expan_eval[mlt_key])
+            expan_acc[mlt_key] = eval.accumulate_results(expan_eval[mlt_key])
 
         sample_path = os.path.join(args.data_path, str(args.bm25_size), f"k{k}")
         os.makedirs(sample_path)
@@ -227,15 +227,15 @@ def main(args):
                 }
                 split_eval = {}
 
-                split_eval[("bm25", split_name)] = eval.accumulate_bm25_results(
+                split_eval[("bm25", split_name)] = eval.accumulate_results(
                     bm25_eval, list(splits[split_name].keys())
                 )
-                split_eval[("bm25-removed", split_name)] = eval.accumulate_bm25_results(
+                split_eval[("bm25-removed", split_name)] = eval.accumulate_results(
                     bm25_removed_eval, list(splits[split_name].keys())
                 )
 
                 for key in expan_results.keys():
-                    split_eval[(key, split_name)] = eval.accumulate_bm25_results(
+                    split_eval[(key, split_name)] = eval.accumulate_results(
                         expan_eval[key], list(splits[split_name].keys())
                     )
 
