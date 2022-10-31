@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import List, Union
 from pydantic import BaseSettings, Field, SecretStr
 
 
@@ -39,9 +39,6 @@ class DatasetSettings(BaseSettings):
         description="Number of documents to retrieve in the first stage with BM25.",
     )
     remove_duplicates: bool = Field(False, description="Remove duplicate documents.")
-    enrich_bm25_path: str = Field(
-        None, description="If provided, use negatives from BM25."
-    )
 
     @property
     def corpus_path(self) -> str:
@@ -55,6 +52,10 @@ class DatasetSettings(BaseSettings):
     @property
     def qrels_path(self) -> str:
         return "not implemented"
+
+    @property
+    def enrich_bm25_path() -> Union[str, None]:
+        return None
 
 
 class TRECCovidDatasetSettings(DatasetSettings):
@@ -87,10 +88,17 @@ class TRECCovidDatasetSettings(DatasetSettings):
 class WebisTouche2020DatasetSettings(DatasetSettings):
     class Config:
         env_file = ".env"
-        env_prefix = "INC_REL_WEBIS_TOUCHE_2020_"
+        env_prefix = "INC_REL_TOUCHE_"
 
     name: str = "touche"
     ir_datasets_name: str
+    data_path: str
+
+    @property
+    def enrich_bm25_path(self) -> str:
+        return os.path.join(
+            os.path.join(self.data_path, "1000", "full_bm25_results.json")
+        )
 
 
 class TRECRobustDatasetSettings(DatasetSettings):
@@ -127,6 +135,41 @@ class TRECNewsDatasetSettings(DatasetSettings):
             "data",
             "TREC_Washington_Post_collection.v2.jl",
         )
+
+
+class ZeroShotSettings(BaseSettings):
+    prefix: str = Field("", description="Prefix for the output files.")
+    model: str = Field("cross-encoder/ms-marco-MiniLM-L-6-v2")
+    model_ctx: str = Field(
+        None,
+        description="The context model used for encoding the documents. If `None`, use `model`.",
+    )
+    scording_fn: str = Field(
+        "cos",
+        description="The scoring function used for ranking the documents if the model is a bi-encoder.",
+    )
+    num_samples: int = Field(
+        ...,
+        description="Re-ranks the documnets that were retrieved from the secod stage using `num_samples` for query expansion.",
+    )
+    seeds: List[int] = Field(
+        [0, 1, 2], description="Random seeds for the zero-shot query expansion."
+    )
+    re_rank: str = Field(
+        "16",
+        description="The number of terms that have been extracted for the second stage retrieval.",
+    )
+    eval_batch_size: int = Field(
+        32, description="The batch size used for the evaluation."
+    )
+
+    @property
+    def model_class(self) -> str:
+        if self.model.startswith("cross-encoder"):
+            _model_class = "ce"
+        else:
+            _model_class = "bi"
+        return _model_class
 
 
 dataset_settings_cls = {
