@@ -56,6 +56,8 @@ index:
 ## evaluate zero-shot re-ranking
 zero-shot: 
 	@echo dataset=$(dataset)
+	@echo num-samples=$(num-samples)
+	python inc_rel/zero_shot.py --dataset $(dataset) --num-samples $(num-samples)
 
 ## evaluate knn re-ranking
 knn: 

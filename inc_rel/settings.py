@@ -144,18 +144,14 @@ class ZeroShotSettings(BaseSettings):
         None,
         description="The context model used for encoding the documents. If `None`, use `model`.",
     )
-    scording_fn: str = Field(
+    scoring_fn: str = Field(
         "cos",
-        description="The scoring function used for ranking the documents if the model is a bi-encoder.",
-    )
-    num_samples: int = Field(
-        ...,
-        description="Re-ranks the documnets that were retrieved from the secod stage using `num_samples` for query expansion.",
+        description="The scoring function used if the model is a bi-encoder.",
     )
     seeds: List[int] = Field(
         [0, 1, 2], description="Random seeds for the zero-shot query expansion."
     )
-    re_rank: str = Field(
+    rerank: str = Field(
         "16",
         description="The number of terms that have been extracted for the second stage retrieval.",
     )
