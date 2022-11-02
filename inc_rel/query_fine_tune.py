@@ -2,25 +2,11 @@ import json
 import os
 from collections import defaultdict
 
-import pandas as pd
 import simple_parsing
 import tqdm
-from args import QueryFineTune
+from args import FineTuneExperiment
 from few_shot_trainer import FewShotTrainer
 from reranking_evaluator import RerankingEvaluator
-
-
-def get_best_experiment(results, selection_metric: str = "ndcg_cut_20"):
-    for i, r in enumerate(results):
-        for metric, score in r["metrics"][list(r["metrics"].keys())[0]].items():
-            results[i][metric] = score
-        r.pop("metrics")
-        r.pop("run")
-    df = pd.DataFrame(results)
-    epoch, learning_rate = (
-        df.groupby(["epoch", "learning_rate"]).mean()[selection_metric].idxmax()
-    )
-    return epoch, learning_rate
 
 
 def main(args):
@@ -110,5 +96,5 @@ def main(args):
 
 
 if __name__ == "__main__":
-    args = simple_parsing.parse(QueryFineTune)
+    args = simple_parsing.parse(FineTuneExperiment)
     main(args)

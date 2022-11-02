@@ -8,6 +8,7 @@ from typing import Callable, Dict, List, Tuple
 
 import Levenshtein as lev
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
@@ -24,6 +25,19 @@ def print_args(args):
         k: v if isinstance(v, (int, float, list)) else str(v) for k, v in args.items()
     }
     print(json.dumps(args, indent=4))
+
+
+def get_best_experiment(results, selection_metric: str = "ndcg_cut_20"):
+    for i, r in enumerate(results):
+        for metric, score in r["metrics"][list(r["metrics"].keys())[0]].items():
+            results[i][metric] = score
+        r.pop("metrics")
+        r.pop("run")
+    df = pd.DataFrame(results)
+    epoch, learning_rate = (
+        df.groupby(["epoch", "learning_rate"]).mean()[selection_metric].idxmax()
+    )
+    return epoch, learning_rate
 
 
 def create_split(
