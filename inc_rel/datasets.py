@@ -10,8 +10,6 @@ import ir_datasets
 import utils
 from tqdm.auto import tqdm
 
-import utils
-
 
 class Dataset:
     def __init__(

@@ -5,14 +5,13 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
-from tqdm.auto import tqdm
-from pydantic import SecretStr
-
 import eval
 import utils
-from settings import dataset_settings_cls
 from datasets import datasets_cls
 from index import Index
+from pydantic import SecretStr
+from settings import dataset_settings_cls
+from tqdm.auto import tqdm
 
 
 def main(args):

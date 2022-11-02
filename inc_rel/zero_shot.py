@@ -2,8 +2,6 @@ import json
 import os
 
 import simple_parsing
-from sentence_transformers import CrossEncoder, SentenceTransformer
-
 from args import ZeroShot
 from eval import accumulate_results
 from reranking_evaluator import RerankingEvaluator

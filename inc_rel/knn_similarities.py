@@ -4,10 +4,9 @@ from typing import Dict, List
 
 import numpy as np
 import simple_parsing
+from args import KNNSimilarities
 from sentence_transformers import util
 from tqdm.auto import tqdm
-
-from args import KNNSimilarities
 
 
 def main(args):
