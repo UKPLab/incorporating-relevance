@@ -66,9 +66,7 @@ def main(args):
 
     for k in [2, 4, 8]:
         with open(
-            os.path.join(
-                args.data_path, f"k{k}", f"expansion_results_{args.rerank}.json"
-            )
+            os.path.join(args.data_path, f"k{k}", f"expansion_results_16.json")
         ) as fh:
             expansion_results: Dict[str, Dict] = json.load(fh)
 
@@ -172,7 +170,7 @@ def main(args):
             with open(
                 args.data_path
                 / f"k{_k}"
-                / f"knn_{args.prefix}_{sim_name}-{fn_name}-rerank-{args.rerank}_eval.json",
+                / f"knn_{args.prefix}_{sim_name}-{fn_name}_eval.json",
                 "w",
             ) as fh:
                 json.dump(full_result[key], fh, indent=4)
@@ -194,8 +192,7 @@ def main(args):
                         args.data_path
                         / f"k{k}"
                         / f"s{seed}"
-                        / f"{split}_knn_{args.prefix}_{sim_name}-{fn_name}_rerank-{args.rerank}_"
-                        f"layers-{args.layers}_eval_acc-3.json",
+                        / f"{split}_knn_{args.prefix}_{sim_name}-{fn_name}_eval_acc.json",
                         "w",
                     ) as fh:
                         json.dump(split_seed_eval_acc, fh, indent=4)
