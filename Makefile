@@ -74,10 +74,10 @@ knn: knn-index knn-similarities knn-eval
 	@echo args=$(args)
 
 ## 	Fine-tune the encoder per query on the few-shot examples.
-query-fine-tune: 
-	@echo dataset=$(dataset)
+query-ft:
+	python inc_rel/query_fine_tune.py $(args)
 
-meta-query-fine-tune:
+meta-query-ft:
 	@echo dataset=$(dataset)
 
 rank-fusion:

@@ -9,3 +9,4 @@ elasticsearch==7.13.1
 pytrec_eval==0.5
 sentence-transformers==2.1.0
 torch==1.11
+pandas==1.5.1
