@@ -2,11 +2,10 @@ import json
 import os
 from typing import Dict, List
 
-import torch
 import simple_parsing
-from sentence_transformers import SentenceTransformer
-
+import torch
 from args import KNNIndex
+from sentence_transformers import SentenceTransformer
 
 
 def main(args):

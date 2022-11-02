@@ -1,10 +1,10 @@
 import os
+from dataclasses import dataclass, field
 from enum import Enum
-from dataclasses import dataclass, field, MISSING
 from typing import List, Union
 
-from settings import dataset_settings_cls
 from sentence_transformers import SentenceTransformer
+from settings import dataset_settings_cls
 
 
 class ScoringFunction(Enum):

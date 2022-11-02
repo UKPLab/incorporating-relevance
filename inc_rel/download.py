@@ -6,8 +6,6 @@ from urllib.parse import urlparse
 import ir_datasets
 import requests
 from requests.auth import HTTPBasicAuth
-from tqdm.auto import tqdm
-
 from settings import (
     Settings,
     TRECCovidDatasetSettings,
@@ -15,6 +13,7 @@ from settings import (
     TRECRobustDatasetSettings,
     WebisTouche2020DatasetSettings,
 )
+from tqdm.auto import tqdm
 
 UNSET_USERNAME = "<NONE>"
 

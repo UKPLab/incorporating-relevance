@@ -7,6 +7,7 @@ from sentence_transformers import CrossEncoder, SentenceTransformer
 from args import ZeroShot
 from eval import accumulate_results
 from reranking_evaluator import RerankingEvaluator
+from sentence_transformers import CrossEncoder, SentenceTransformer
 
 
 def main(args):

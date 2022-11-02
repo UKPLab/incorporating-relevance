@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Callable, Dict, List, Union
 
 import ir_datasets
+import utils
 from tqdm.auto import tqdm
 
 import utils

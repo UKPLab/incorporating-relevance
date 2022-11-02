@@ -3,12 +3,11 @@ import json
 import os
 import time
 
-from tqdm.auto import tqdm
-
+from datasets import datasets_cls
 from eval import accumulate_results, eval_bm25
 from index import Index
-from datasets import datasets_cls
 from settings import dataset_settings_cls
+from tqdm.auto import tqdm
 
 
 def main(args):

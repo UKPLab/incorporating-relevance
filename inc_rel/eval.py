@@ -4,7 +4,6 @@ from typing import Dict, List
 import numpy as np
 from pytrec_eval import RelevanceEvaluator
 
-
 at_k = [1, 5, 10, 20, 50, 100, 1000]
 map = "map_cut." + ",".join([str(k) for k in at_k])
 ndcg = "ndcg_cut." + ",".join([str(k) for k in at_k])

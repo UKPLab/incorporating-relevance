@@ -1,13 +1,12 @@
 import ast
 import json
-import os
 import operator
+import os
 from collections import defaultdict
 from typing import Dict, List
 
-import simple_parsing
-
 import eval
+import simple_parsing
 from args import Experiment
 from reranking_evaluator import RerankingEvaluator
 

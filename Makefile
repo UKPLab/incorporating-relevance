@@ -16,6 +16,7 @@ install-dev:
 
 ## 		Format code base.
 format: 
+	isort .
 	black .
 	
 ## 		Download datasets according to the configuration in .env.

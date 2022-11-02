@@ -3,12 +3,12 @@ from contextlib import contextmanager
 from typing import Dict, List, Tuple, Union
 
 import numpy as np
+import torch
 from pytrec_eval import RelevanceEvaluator
 from sentence_transformers import util
+from sentence_transformers import util as st_util
 from sentence_transformers.cross_encoder.CrossEncoder import CrossEncoder
 from sentence_transformers.SentenceTransformer import SentenceTransformer
-from sentence_transformers import util as st_util
-import torch
 from tqdm.auto import tqdm
 
 
