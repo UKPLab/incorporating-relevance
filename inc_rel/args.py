@@ -19,6 +19,11 @@ class FTParams(str, Enum):
     head = "head"
 
 
+class PreTrainMethod(str, Enum):
+    supervised = "supervised"
+    meta = "meta"
+
+
 @dataclass(kw_only=True)
 class Experiment:
     prefix: str
@@ -59,11 +64,11 @@ class KNNSimilarities(Experiment):
 
 
 @dataclass(kw_only=True)
-class QueryFineTune(Experiment):
+class FineTuneExperiment(Experiment):
     num_samples: int
     seed: int
-    ft_params: FTParams = "bias"
     model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    ft_params: FTParams = "bias"
     eval_batch_size: int = 32
     epochs: int = 8
     learning_rates: List[float] = field(default_factory=lambda: [2e-3, 2e-4, 2e-5])
@@ -84,3 +89,7 @@ class QueryFineTune(Experiment):
             f"s{self.seed}",
             f"valid_{self.model_class}_{self.ft_params}_few_shot_hpsearch.json",
         )
+
+
+class PreTrain(FineTuneExperiment):
+    pretrain_method: PreTrainMethod = "meta"

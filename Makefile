@@ -63,22 +63,22 @@ knn-index:
 	python inc_rel/knn_index.py $(args)
 knn-similarities: 
 	@echo Computing query-document similarities for dataset=$(dataset)
-	# python inc_rel/knn_similarities.py --dataset $(dataset)
+	python inc_rel/knn_similarities.py --dataset $(dataset)
 knn-eval: 
-	# @echo dataset=$(dataset)
 	@echo Evaluating KNN for dataset=$(dataset)
-	# python inc_rel/knn_eval.py --dataset $(dataset)
+	python inc_rel/knn_eval.py --dataset $(dataset)
 knn: args:=$(args)
 ## 			Evaluate knn re-ranking.
 knn: knn-index knn-similarities knn-eval
 	@echo args=$(args)
 
-## 	Fine-tune the encoder per query on the few-shot examples.
+## 		Fine-tune the re-ranker per query on the few-shot examples.
 query-ft:
 	python inc_rel/query_fine_tune.py $(args)
 
-meta-query-ft:
-	@echo dataset=$(dataset)
+## 	Pre-train the re-ranker using supervised or meta learning, then Fine-tune per query on the few-shot examples.
+pre-train-query-ft:
+	python inc_rel/pre_train.py $(args)
 
 rank-fusion:
 	@echo dataset=$(dataset)
