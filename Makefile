@@ -24,23 +24,8 @@ download:
 	@echo env-file=$(env-file)
 	python inc_rel/download.py --env-file $(env-file)
 
-## 		Get first stage retrieval results using BM25.
-first-stage:
-	@echo dataset=$(dataset)
-	docker run -d \
-		-v $(INC_REL_ES_DATA_DIR):/usr/share/elasticsearch/data \
-		-p 9200:9200 \
-		-e "discovery.type=single-node" \
-		-e "indices.query.bool.max_clause_count=16384" \
-		--name inc-rel-es \
-		elasticsearch:7.11.2
-	@bash -c "until curl -s -o /dev/null http://localhost:9200; do echo 'Waiting for Elasticsearch.'; sleep 3; done"
-	python inc_rel/first_stage.py --dataset $(dataset)
-	docker rm -s inc-rel-es
 
-## 		Create an elasticsearch index; perform first and second stage retrieval and generate the few-shot dataset.
-index: 
-	@echo dataset=$(dataset)
+es-up: 
 	docker run -d \
 		-v $(INC_REL_ES_DATA_DIR):/usr/share/elasticsearch/data \
 		-p 9200:9200 \
@@ -50,23 +35,33 @@ index:
 		elasticsearch:7.11.2
 	bash -c "until curl -s -o /dev/null http://localhost:9200; do echo 'Waiting for Elasticsearch'; sleep 3; done"
 
-	python inc_rel/generate_few_shot.py --dataset $(dataset)
+es-down:
+	docker rm -s inc-rel-es
 
-	# docker rm -s inc-rel-es
+genreate-first-stage:
+	python inc_rel/first_stage.py --dataset $(dataset) || $(MAKE) es-down
+	
+first-stage: dataset:=$(dataset)
+## 		Get first stage retrieval results using BM25.
+first-stage: es-up generate-first-stage es-down
+
+generate-few-shot:
+	python inc_rel/generate_few_shot.py --dataset $(dataset) || $(MAKE) es-down
+index: dataset:=$(dataset)
+## 		Create an elasticsearch index; perform first and second stage retrieval and generate the few-shot dataset.
+index: es-up generate-few-shot es-down
+
 
 ## 		Evaluate zero-shot re-ranking.
 zero-shot: 
 	python inc_rel/zero_shot.py $(args)
 
 knn-index: 
-	@echo Creating KNN index
 	python inc_rel/knn_index.py $(args)
 knn-similarities: 
-	@echo Computing query-document similarities for dataset=$(dataset)
-	python inc_rel/knn_similarities.py --dataset $(dataset)
+	python inc_rel/knn_similarities.py $(args)
 knn-eval: 
-	@echo Evaluating KNN for dataset=$(dataset)
-	python inc_rel/knn_eval.py --dataset $(dataset)
+	python inc_rel/knn_eval.py $(args)
 knn: args:=$(args)
 ## 			Evaluate knn re-ranking.
 knn: knn-index knn-similarities knn-eval
