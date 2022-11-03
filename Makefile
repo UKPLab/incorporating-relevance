@@ -2,6 +2,8 @@ include .env
 
 .PHONY: install install-dev format download index first-stage zero-shot knn query-fine-tune meta-query-fine-tune rank-fusion help
 .DEFAULT_GOAL := help
+DOCKER_AVAILABLE := $(shell docker -v 2>/dev/null)
+ES_DIR := ./elasticsearch-7.11.2
 
 ## 		Install dependencies. Note: Activate virtualenv before running this command.
 install:
@@ -24,8 +26,9 @@ download:
 	@echo env-file=$(env-file)
 	python inc_rel/download.py --env-file $(env-file)
 
-
 es-up: 
+ifdef DOCKER_AVAILABLE
+	@echo Runnig Elasticsearch in docker
 	docker run -d \
 		-v $(INC_REL_ES_DATA_DIR):/usr/share/elasticsearch/data \
 		-p 9200:9200 \
@@ -33,10 +36,19 @@ es-up:
 		-e "indices.query.bool.max_clause_count=16384" \
 		--name inc-rel-es \
 		elasticsearch:7.11.2
+else
+	@echo Running Elasticsearch on host
+	$(ES_DIR)/bin/elasticsearch -Ediscovery.type=single-node -Eindices.query.bool.max_clause_count=16438 -d -p $(PWD)/es.pid
+endif
+
 	bash -c "until curl -s -o /dev/null http://localhost:9200; do echo 'Waiting for Elasticsearch'; sleep 3; done"
 
 es-down:
+ifdef DOCKER_AVAILABLE
 	docker rm -s inc-rel-es
+else
+	kill `cat es.pid`
+endif
 
 genreate-first-stage:
 	python inc_rel/first_stage.py --dataset $(dataset) || $(MAKE) es-down
