@@ -55,7 +55,7 @@ class DatasetSettings(BaseSettings):
         return "not implemented"
 
     @property
-    def enrich_bm25_path() -> Union[str, None]:
+    def enrich_bm25_path(self) -> Union[str, None]:
         return None
 
 
