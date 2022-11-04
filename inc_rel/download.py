@@ -69,9 +69,9 @@ def untar_gzip(file_path: str, output_dir: str) -> None:
                 tar.extract(name, path=output_dir)
 
 
-def main(env_file: str = ".env") -> None:
+def main() -> None:
     # Setup data dir
-    settings = Settings(_env_file=env_file)
+    settings = Settings()
     os.makedirs(settings.raw_path, exist_ok=True)
 
     # Download TREC-COVID
@@ -97,11 +97,11 @@ def main(env_file: str = ".env") -> None:
     )
 
     # Download Webis Touche 2020
-    webis_touche_2020_settings = WebisTouche2020DatasetSettings(_env_file=env_file)
+    webis_touche_2020_settings = WebisTouche2020DatasetSettings()
     ir_datasets.load(webis_touche_2020_settings.ir_datasets_name)
 
     # Download TREC-Robust
-    trec_robust_settings = TRECRobustDatasetSettings(_env_file=env_file)
+    trec_robust_settings = TRECRobustDatasetSettings()
     if trec_robust_settings.username == UNSET_USERNAME:
         print(
             "Skipping TREC-Robust download. Get credentials from TREC for this dataset."
@@ -143,7 +143,7 @@ def main(env_file: str = ".env") -> None:
             )
 
     # Download TREC-News
-    trec_news_settings = TRECNewsDatasetSettings(_env_file=env_file)
+    trec_news_settings = TRECNewsDatasetSettings()
     if trec_news_settings.username == UNSET_USERNAME:
         print(
             "Skipping TREC-News download. Get credentials from TREC for this dataset."
@@ -161,9 +161,4 @@ def main(env_file: str = ".env") -> None:
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-e", "--env-file", type=str, default=".env")
-    args = parser.parse_args()
-    main(env_file=args.env_file)
+    main()

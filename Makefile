@@ -23,8 +23,7 @@ format:
 	
 ## 		Download datasets according to the configuration in .env.
 download: 
-	@echo env-file=$(env-file)
-	python inc_rel/download.py --env-file $(env-file)
+	python inc_rel/download.py
 
 es-up: 
 ifdef DOCKER_AVAILABLE
