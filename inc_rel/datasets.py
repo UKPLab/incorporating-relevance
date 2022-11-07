@@ -27,6 +27,7 @@ class Dataset:
         self.qrels = self.read_qrels(qrels_path)
         if remove_topics_with_few_annotations:
             self.remove_topics_with_few_annotations(remove_topics_with_few_negatives)
+        self.corpus_size = None
 
     def remove_topic(self, topic_id):
         self.qrels.pop(topic_id, None)
@@ -93,6 +94,7 @@ class TrecCovid(Dataset):
     def __init__(self, *args, **kwargs):
         self.min_annotations = 32
         self.min_relevant_relevancy = 2
+        self.corpus_size = 192509
         super().__init__(*args, **kwargs)
 
     def read_corpus(self, corpus_path: Path) -> Dict[str, str]:
@@ -141,6 +143,7 @@ class TrecNews(Dataset):
     def __init__(self, *args, **kwargs):
         self.min_annotations = 32
         self.min_relevant_relevancy = 1
+        self.corpus_size = 595037
         super().__init__(*args, **kwargs)
 
     def read_topics(self, topics_path: Path) -> Dict[str, str]:
@@ -179,7 +182,9 @@ class TrecNews(Dataset):
             if doc_ids is not None:
                 doc_ids = list(set(doc_ids))
             with open(corpus_path) as fh:
-                for line in tqdm(fh, total=595037, disable=not verbose, ncols=100):
+                for line in tqdm(
+                    fh, total=self.corpus_size, disable=not verbose, ncols=100
+                ):
                     doc = json.loads(line)
                     if doc_ids is None or doc["id"] in doc_ids:
                         full_text = []
@@ -205,36 +210,22 @@ class TrecNews(Dataset):
 
         return corpus_iter
 
-    def read_topics(self, queries_file_path: Path) -> Dict[str, str]:
-        queries = {}
-        with open(queries_file_path) as fh:
-            for line in fh:
-                line = json.loads(line)
-                queries[str(line["qid"])] = line["query"]
-        return queries
-
-    def read_qrels(self, qrels_path: Path) -> Dict[str, Dict[str, int]]:
-
-        qrels = defaultdict(dict)
-        with open(qrels_path, "r") as fh:
-            for line in fh:
-                query_id, _, doc_id, relevance = line.strip().strip("\n").split(" ")
-                qrels[str(query_id)][doc_id] = int(relevance)
-
-        return qrels
-
 
 class Robust04(Dataset):
     def __init__(self, *args, **kwargs):
         self.min_annotations = 32
         self.min_relevant_relevancy = 1
         self.dataset = ir_datasets.load("trec-robust04")
+        self.corpus_size = 528155
         super().__init__(*args, **kwargs)
 
     def read_corpus(self, *args, **kwargs) -> Dict[str, str]:
         corpus = {}
         for doc in tqdm(
-            self.dataset.docs_iter(), total=528155, desc="loading dataset", ncols=100
+            self.dataset.docs_iter(),
+            total=self.corpus_size,
+            desc="loading dataset",
+            ncols=100,
         ):
             corpus[doc.doc_id] = doc.text
         return corpus
@@ -257,12 +248,16 @@ class Touche(Dataset):
         self.min_annotations = 32
         self.min_relevant_relevancy = 3
         self.dataset = ir_datasets.load("beir/webis-touche2020")
+        self.corpus_size = 382545
         super().__init__(*args, **kwargs)
 
     def read_corpus(self, *args, **kwargs) -> Dict[str, str]:
         corpus = {}
         for doc in tqdm(
-            self.dataset.docs_iter(), total=382545, desc="loading dataset", ncols=100
+            self.dataset.docs_iter(),
+            total=self.corpus_size,
+            desc="loading dataset",
+            ncols=100,
         ):
             corpus[doc.doc_id] = doc.text
         return corpus

@@ -28,9 +28,9 @@ def main(args):
     )
 
     if not index.index_exists(index=args.name):
-        index.index_corpus(index=args.name, corpus=dataset.corpus)
-        for _ in tqdm(range(120), desc="Granting ES some beauty sleep."):
-            time.sleep(1)
+        index.index_corpus(
+            index=args.name, corpus=dataset.corpus, corpus_size=dataset.corpus_size
+        )
 
     # do first bm25 retrieval
     bm25_results, bm25_docs, _ = index.bm25_query(

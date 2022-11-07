@@ -27,10 +27,15 @@ class Index:
             },
         )
 
-    def index_corpus(self, index: str, corpus: Union[Callable, Dict[str, str]]):
+    def index_corpus(
+        self,
+        index: str,
+        corpus: Union[Callable, Dict[str, str]],
+        corpus_size: Union[float, None] = None,
+    ):
         self.create_index(index)
         chunk_size = 1024
-        with tqdm(desc="indexing", ncols=100) as pbar:
+        with tqdm(desc="indexing", ncols=100, total=corpus_size) as pbar:
             if isinstance(corpus, Callable):
                 chunk = []
                 for doc in corpus(verbose=False):
@@ -62,6 +67,9 @@ class Index:
                     es_helpers.bulk(self.es, chunk)
                     pbar.update(chunk_size)
                     time.sleep(0.1)
+
+        for _ in tqdm(range(120), ncols=100, desc="Granting ES some beauty sleep."):
+            time.sleep(1)
 
     def get_doc_by_id(self, index: str, doc_id: str):
         return self.es.get(index=index, id=doc_id)["_source"]["text"]
