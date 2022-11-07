@@ -2,7 +2,7 @@ include .env
 
 .PHONY: install install-dev format download index first-stage zero-shot knn query-fine-tune meta-query-fine-tune rank-fusion help
 .DEFAULT_GOAL := help
-DOCKER_AVAILABLE := $(shell docker -v 2>/dev/null)
+DOCKER_AVAILABLE := $(shell dockerdd -v 2>/dev/null)
 ES_DIR := ./elasticsearch-7.11.2
 
 ## 		Install dependencies. Note: Activate virtualenv before running this command.
@@ -49,15 +49,15 @@ else
 	kill `cat es.pid`
 endif
 
-genreate-first-stage:
-	python inc_rel/first_stage.py --dataset $(dataset) || $(MAKE) es-down
+generate-first-stage:
+	IR_DATASETS_HOME=$(IR_DATASETS_HOME) python inc_rel/first_stage.py --dataset $(dataset) || $(MAKE) es-down
 	
 first-stage: dataset:=$(dataset)
 ## 		Get first stage retrieval results using BM25.
 first-stage: es-up generate-first-stage es-down
 
 generate-few-shot:
-	python inc_rel/generate_few_shot.py --dataset $(dataset) || $(MAKE) es-down
+	IR_DATASETS_HOME=$(IR_DATASETS_HOME) python inc_rel/generate_few_shot.py --dataset $(dataset) || $(MAKE) es-down
 index: dataset:=$(dataset)
 ## 		Create an elasticsearch index; perform first and second stage retrieval and generate the few-shot dataset.
 index: es-up generate-few-shot es-down
