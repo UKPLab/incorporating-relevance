@@ -150,14 +150,18 @@ def main() -> None:
         )
     else:
         os.makedirs(trec_news_settings.raw_path, exist_ok=True)
-        out_file = download_file(
-            trec_news_settings.corpus_url,
+        download_file(
+            trec_news_settings.topics_url,
             trec_news_settings.raw_path,
-            trec_news_settings.username,
-            trec_news_settings.password.get_secret_value(),
-            pbar_desc="trec-news/corpus",
+            response_attr="content",
+            pbar_desc="trec-news/topics",
         )
-        untar_gzip(out_file, trec_news_settings.raw_path)
+        download_file(
+            trec_news_settings.qrels_url,
+            trec_news_settings.raw_path,
+            response_attr="content",
+            pbar_desc="trec-news/qrels",
+        )
 
 
 if __name__ == "__main__":

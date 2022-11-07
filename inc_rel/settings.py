@@ -127,6 +127,8 @@ class TRECNewsDatasetSettings(DatasetSettings):
     username: str
     password: SecretStr
     corpus_url: str
+    topics_url: str
+    qrels_url: str
 
     @property
     def corpus_path(self) -> str:
@@ -136,6 +138,14 @@ class TRECNewsDatasetSettings(DatasetSettings):
             "data",
             "TREC_Washington_Post_collection.v2.jl",
         )
+
+    @property
+    def topics_path(self) -> str:
+        return os.path.join(self.raw_path, "newsir19-background-linking-topics.xml")
+
+    @property
+    def qrels_path(self) -> str:
+        return os.path.join(self.raw_path, "newsir19-qrels-background.txt")
 
 
 dataset_settings_cls = {
