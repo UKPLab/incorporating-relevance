@@ -32,7 +32,7 @@ def main(args):
     similarites = {}
     for k in [2, 4, 8]:
         with open(
-            os.path.join(args.data_path, f"k{k}", f"expansion_results.json")
+            os.path.join(args.data_path, f"k{k}", f"expansion_results_16.json")
         ) as fh:
             expansion_results: Dict[Dict] = json.load(fh)
         for topic_id, doc_id2score in tqdm(
