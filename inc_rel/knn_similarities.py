@@ -38,6 +38,7 @@ def main(args):
         for topic_id, doc_id2score in tqdm(
             expansion_results.items(),
             total=len(expansion_results),
+            ncols=100,
             desc="expansion_results",
         ):
             query_embedding = np.asarray(embeddings["queries"][topic_id]).reshape(1, -1)
@@ -59,7 +60,7 @@ def main(args):
                 print(f"No new query-doc pairs found for topic={topic_id} at k={k}")
 
         for topic_id, annotation in tqdm(
-            annotations.items(), total=len(annotations), desc="Annotations"
+            annotations.items(), total=len(annotations), ncols=100, desc="Annotations"
         ):
             annotation_doc_ids = [a["doc_id"] for a in annotation]
             annotation_embeddings = [
