@@ -88,7 +88,7 @@ def main(args):
             )
             with open(
                 os.path.join(
-                    args.dataset_path,
+                    args.data_path,
                     f"k{args.num_samples}",
                     f"s{args.seed}",
                     f"{split}_{args.model_class}_{args.ft_params}_16_few_shot.json",
