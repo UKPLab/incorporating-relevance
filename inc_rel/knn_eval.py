@@ -168,9 +168,11 @@ def main(args):
         for key in full_result.keys():
             _k, sim_name, fn_name = key
             with open(
-                args.data_path
-                / f"k{_k}"
-                / f"knn_{args.prefix}_{sim_name}-{fn_name}_eval.json",
+                os.path.join(
+                    args.data_path,
+                    f"k{_k}",
+                    f"knn_{args.prefix}_{sim_name}-{fn_name}_eval.json",
+                ),
                 "w",
             ) as fh:
                 json.dump(full_result[key], fh, indent=4)
@@ -178,7 +180,7 @@ def main(args):
         for seed in [0, 1, 2]:
             for split in ["train", "valid", "test"]:
                 with open(
-                    args.data_path / f"k{k}" / f"s{seed}" / f"{split}.json"
+                    os.path.join(args.data_path, f"k{k}", f"s{seed}", f"{split}.json")
                 ) as fh:
                     split_seed = json.load(fh)
 
@@ -189,10 +191,12 @@ def main(args):
                     _, sim_name, fn_name = exp_name
 
                     with open(
-                        args.data_path
-                        / f"k{k}"
-                        / f"s{seed}"
-                        / f"{split}_knn_{args.prefix}_{sim_name}-{fn_name}_eval_acc.json",
+                        os.path.join(
+                            args.data_path,
+                            f"k{k}",
+                            f"s{seed}",
+                            f"{split}_knn_{args.prefix}_{sim_name}-{fn_name}_eval_acc.json",
+                        ),
                         "w",
                     ) as fh:
                         json.dump(split_seed_eval_acc, fh, indent=4)
