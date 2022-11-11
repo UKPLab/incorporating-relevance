@@ -20,7 +20,7 @@ def main(args):
     with open(os.path.join(args.data_path, "topics.json")) as fh:
         queries = json.load(fh)
 
-    with open(os.path.join(args.data_path / "annotations_8.json")) as fh:
+    with open(os.path.join(args.data_path, "annotations_8.json")) as fh:
         annotations: Dict[List[Dict]] = json.load(fh)
     annotations = {
         a["doc_id"]: a["document"]
