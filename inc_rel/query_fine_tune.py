@@ -86,10 +86,12 @@ def main(args):
                 update_pbar=False,
             )
             with open(
-                args.dataset_path
-                / f"k{args.num_samples}"
-                / f"s{args.seed}"
-                / f"{split}_{args.model_class}_{args.ft_params}_16_few_shot.json",
+                os.path.join(
+                    args.dataset_path,
+                    f"k{args.num_samples}",
+                    f"s{args.seed}",
+                    f"{split}_{args.model_class}_{args.ft_params}_16_few_shot.json",
+                ),
                 "w",
             ) as fh:
                 json.dump(few_shot_results, fh, indent=4)
