@@ -204,14 +204,14 @@ def main(args):
 
                     split2metric[split].append(split_seed_eval_acc["mean"][args.metric])
                     print(
-                        f"k={args.num_samples:02d} split={split:5s} seed={seed:02d} "
+                        f"k={k:02d} split={split:5s} seed={seed:02d} "
                         f"{args.metric}={split_seed_eval_acc['mean'][args.metric]:.4f}"
                     )
 
         print("---MEAN---")
         for split in args.splits:
             print(
-                f"k={args.num_samples:02d} split={split:5s} "
+                f"k={k:02d} split={split:5s} "
                 f"{args.metric}={sum(split2metric[split]) / len(split2metric[split]):.4f}"
             )
 
