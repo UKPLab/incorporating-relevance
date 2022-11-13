@@ -29,6 +29,7 @@ class Experiment:
     prefix: str
     dataset: str
     seeds: List[int] = field(default_factory=lambda: [0, 1, 2])
+    splits: List[str] = field(default_factory=lambda: ["train", "valid", "test"])
     bm25_size: int = 1000
     metric: str = "ndcg_cut_20"
 
