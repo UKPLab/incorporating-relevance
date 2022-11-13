@@ -101,7 +101,8 @@ def main(args):
             mean_metric = 0
             for result in few_shot_results:
                 mean_metric += (
-                    len(few_shot_results)
+                    1
+                    / len(few_shot_results)
                     * result["metrics"][list(result["metrics"].keys())[0]][args.metric]
                 )
             print(
