@@ -82,10 +82,9 @@ def main(args):
     ) as fh:
         json.dump(run, fh, indent=4)
 
-    splits = ["train", "valid", "test"]
+    split2metric = defaultdict(list)
     for seed in args.seeds:
-        split2metric = defaultdict(list)
-        for split in splits:
+        for split in args.splits:
             with open(
                 os.path.join(
                     args.data_path,
@@ -113,14 +112,15 @@ def main(args):
 
             split2metric[split].append(split_seed_eval_acc["mean"][args.metric])
             print(
-                f"split={split:5s} seed={seed:03d} "
+                f"k={args.num_samples:02d} split={split:5s} seed={seed:02d} "
                 f"{args.metric}={split_seed_eval_acc['mean'][args.metric]:.4f}"
             )
 
     print("---MEAN---")
-    for split in splits:
+    for split in args.splits:
         print(
-            f"split={split:5s} {args.metric}={sum(split2metric[split]) / len(split2metric[split]):.4f}"
+            f"k={args.num_samples:02d} split={split:5s} "
+            f"{args.metric}={sum(split2metric[split]) / len(split2metric[split]):.4f}"
         )
 
 
