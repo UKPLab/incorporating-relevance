@@ -42,7 +42,7 @@ def main(args):
     ranking_evaluator = RerankingEvaluator(qrels)
 
     annotations = defaultdict(dict)
-    for split in ["train", "valid", "test"]:
+    for split in args.splits:
         with open(
             os.path.join(
                 args.data_path, f"k{args.num_samples}", f"s{args.seed}", f"{split}.json"
@@ -79,7 +79,7 @@ def main(args):
 
         best_epochs, best_learning_rate = get_best_experiment(results, "ndcg_cut_20")
         print(f"Best Epoch={best_epochs}. Best LR={best_learning_rate}")
-        for split in ["train", "valid", "test"]:
+        for split in args.splits:
             few_shot_results = few_shot_trainer.train(
                 annotations[split],
                 best_epochs,
@@ -97,6 +97,17 @@ def main(args):
                 "w",
             ) as fh:
                 json.dump(few_shot_results, fh, indent=4)
+
+            mean_metric = 0
+            for result in few_shot_results:
+                mean_metric += (
+                    len(few_shot_results)
+                    * result["metrics"][list(result["metrics"].keys())[0]][args.metric]
+                )
+            print(
+                f"k={args.num_samples:02d} split={split:5s} "
+                f"{args.metric}={mean_metric:.4f}"
+            )
 
 
 if __name__ == "__main__":
