@@ -30,6 +30,7 @@ class Experiment:
     dataset: str
     seeds: List[int] = field(default_factory=lambda: [0, 1, 2])
     bm25_size: int = 1000
+    metric: str = "ndcg_cut_20"
 
     @property
     def data_path(self) -> str:

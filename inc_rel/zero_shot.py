@@ -1,5 +1,6 @@
 import json
 import os
+from collections import defaultdict
 
 import simple_parsing
 from args import ZeroShot
@@ -81,8 +82,10 @@ def main(args):
     ) as fh:
         json.dump(run, fh, indent=4)
 
+    splits = ["train", "valid", "test"]
     for seed in args.seeds:
-        for split in ["train", "valid", "test"]:
+        split2metric = defaultdict(list)
+        for split in splits:
             with open(
                 os.path.join(
                     args.data_path,
@@ -107,6 +110,17 @@ def main(args):
                 "w",
             ) as fh:
                 json.dump(split_seed_eval_acc, fh, indent=4)
+
+            split2metric[split].append(split_seed_eval_acc["mean"][args.metric])
+            print(
+                f"split={split:5s} {args.metric}={split_seed_eval_acc['mean'][args.metric]:.4f}"
+            )
+
+    print("---MEAN---")
+    for split in splits:
+        print(
+            f"split={split:5s} {args.metric}={sum(split2metric[split]) / len(split2metric[split]):.4f}"
+        )
 
 
 if __name__ == "__main__":
