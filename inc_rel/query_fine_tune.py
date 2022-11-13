@@ -78,6 +78,7 @@ def main(args):
                 json.dump(results, fh, indent=4)
 
         best_epochs, best_learning_rate = get_best_experiment(results, "ndcg_cut_20")
+        print(f"Best Epoch={best_epochs}. Best LR={best_learning_rate}")
         for split in ["train", "valid", "test"]:
             few_shot_results = few_shot_trainer.train(
                 annotations[split],
