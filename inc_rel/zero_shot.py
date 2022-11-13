@@ -113,7 +113,8 @@ def main(args):
 
             split2metric[split].append(split_seed_eval_acc["mean"][args.metric])
             print(
-                f"split={split:5s} {args.metric}={split_seed_eval_acc['mean'][args.metric]:.4f}"
+                f"split={split:5s} seed={seed:03d} "
+                f"{args.metric}={split_seed_eval_acc['mean'][args.metric]:.4f}"
             )
 
     print("---MEAN---")
