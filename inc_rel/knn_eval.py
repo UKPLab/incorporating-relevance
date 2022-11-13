@@ -201,12 +201,15 @@ def main(args):
                         "w",
                     ) as fh:
                         json.dump(split_seed_eval_acc, fh, indent=4)
-
-                    split2metric[split].append(split_seed_eval_acc["mean"][args.metric])
-                    print(
-                        f"k={k:02d} split={split:5s} seed={seed:02d} "
-                        f"{args.metric}={split_seed_eval_acc['mean'][args.metric]:.4f}"
-                    )
+                    if sim_name == "query_annot" and fn_name == "sum":
+                        # works best
+                        split2metric[split].append(
+                            split_seed_eval_acc["mean"][args.metric]
+                        )
+                        print(
+                            f"k={k:02d} split={split:5s} seed={seed:02d} "
+                            f"{args.metric}={split_seed_eval_acc['mean'][args.metric]:.4f}"
+                        )
 
         print("---MEAN---")
         for split in args.splits:
