@@ -78,7 +78,7 @@ def main(args):
                 )
                 results.extend(exp_results)
                 # write out results after each experiment
-                with open(args.out_file, "w") as fh:
+                with open(args.out_file.format(seed=seed), "w") as fh:
                     json.dump(results, fh, indent=4)
 
             best_epochs, best_learning_rate = get_best_experiment(

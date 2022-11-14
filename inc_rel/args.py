@@ -87,7 +87,7 @@ class FineTuneExperiment(Experiment):
         return os.path.join(
             self.data_path,
             f"k{self.num_samples}",
-            f"s{self.seed}",
+            f"s{{seed}}",
             f"valid_{self.model_class}_{self.ft_params}_few_shot_hpsearch.json",
         )
 
