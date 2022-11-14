@@ -66,7 +66,7 @@ class RerankingEvaluator:
                 queries.items(),
                 desc="eval queries",
                 ncols=100,
-                disable=False,
+                disable=not show_progress_bar,
             ):
 
                 doc_ids = inital_ranking[topic_id].keys()
