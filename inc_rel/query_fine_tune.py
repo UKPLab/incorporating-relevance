@@ -122,7 +122,7 @@ def main(args):
     print("---MEAN---")
     for split in args.splits:
         print(
-            f"k={k:02d} split={split:5s} "
+            f"k={args.num_samples:02d} split={split:5s} "
             f"{args.metric}={sum(split2metric[split]) / len(split2metric[split]):.4f}"
         )
 
