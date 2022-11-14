@@ -12,21 +12,6 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-# https://stackoverflow.com/a/45392259
-def environ_or_required(key):
-    return (
-        {"default": os.environ.get(key)} if os.environ.get(key) else {"required": True}
-    )
-
-
-def print_args(args):
-    args = vars(args)
-    args = {
-        k: v if isinstance(v, (int, float, list)) else str(v) for k, v in args.items()
-    }
-    print(json.dumps(args, indent=4))
-
-
 def get_best_experiment(results, selection_metric: str = "ndcg_cut_20"):
     for i, r in enumerate(results):
         for metric, score in r["metrics"][list(r["metrics"].keys())[0]].items():
