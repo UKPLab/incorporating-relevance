@@ -68,7 +68,6 @@ class KNNSimilarities(Experiment):
 @dataclass(kw_only=True)
 class FineTuneExperiment(Experiment):
     num_samples: int
-    seed: int
     model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     ft_params: FTParams = "bias"
     eval_batch_size: int = 32
