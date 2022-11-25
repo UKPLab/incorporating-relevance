@@ -151,8 +151,9 @@ class PreTrainTrainer:
                         label=float(a["label"] > 0),
                     )
                 )
-
-        return DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        g = torch.Generator()
+        g.manual_seed(0)
+        return DataLoader(dataset, batch_size=batch_size, shuffle=True, generator=g)
 
     @staticmethod
     def batch_to_device(batch, device):
@@ -207,11 +208,15 @@ class PreTrainTrainer:
 
             return padded_sequences, targets
 
+        g = torch.Generator()
+        g.manual_seed(0)
+
         return DataLoader(
             MetaDataset(annotations),
             batch_size=batch_size,
             collate_fn=collate_fn,
             shuffle=True,
+            generator=g,
         )
 
     def train(self, *args, **kwargs):

@@ -95,8 +95,9 @@ class FewShotTrainer:
                     label=float(annotation["label"] > 0),
                 )
             )
-
-        return DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        g = torch.Generator()
+        g.manual_seed(0)
+        return DataLoader(dataset, batch_size=batch_size, shuffle=True, generator=g)
 
     def train(
         self,
