@@ -138,7 +138,9 @@ class PreTrainTrainer:
                 "weight_decay": 0.0,
             },
         ]
-        optimizer = transformers.AdamW(optimizer_grouped_parameters, lr=learning_rate)
+        optimizer = transformers.AdamW(
+            optimizer_grouped_parameters, lr=learning_rate, no_deprecation_warning=True
+        )
         return optimizer
 
     def init_dataloader(self, annotations, batch_size):
