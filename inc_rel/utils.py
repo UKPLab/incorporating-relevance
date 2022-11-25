@@ -20,7 +20,9 @@ def get_best_experiment(results, selection_metric: str = "ndcg_cut_20"):
         r.pop("run")
     df = pd.DataFrame(results)
     epoch, learning_rate = (
-        df.groupby(["epoch", "learning_rate"]).mean()[selection_metric].idxmax()
+        df.groupby(["epoch", "learning_rate"])
+        .mean(numeric_only=True)[selection_metric]
+        .idxmax()
     )
     return epoch, learning_rate
 
