@@ -74,6 +74,8 @@ class FineTuneExperiment(Experiment):
     epochs: int = 8
     learning_rates: List[float] = field(default_factory=lambda: [2e-3, 2e-4, 2e-5])
 
+    out_file_suffix: str = "few_shot_hpsearch"
+
     @property
     def model_class(self) -> str:
         if self.model.startswith("cross-encoder"):
@@ -88,9 +90,16 @@ class FineTuneExperiment(Experiment):
             self.data_path,
             f"k{self.num_samples}",
             f"s{{seed}}",
-            f"valid_{self.model_class}_{self.ft_params}_few_shot_hpsearch.json",
+            f"valid_{self.model_class}_{self.ft_params}_{self.out_file_suffix}.json",
         )
 
 
+@dataclass(kw_only=True)
 class PreTrain(FineTuneExperiment):
     pretrain_method: PreTrainMethod = "meta"
+    out_file_suffix: str = "pre_train_few_shot_hpsearch"
+
+
+@dataclass(kw_only=True)
+class RankFusion:
+    pass
