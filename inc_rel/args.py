@@ -41,6 +41,7 @@ class Experiment:
 
 @dataclass(kw_only=True)
 class ZeroShot(Experiment):
+    prefix: str = "zero-shot"
     num_samples: int
     model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     model_ctx: Union[SentenceTransformer, None] = None
@@ -71,6 +72,7 @@ class KNNSimilarities(KNN):
 
 @dataclass(kw_only=True)
 class FineTuneExperiment(Experiment):
+    prefix: str = "query-ft"
     num_samples: int
     model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     ft_params: FTParams = "bias"
@@ -100,11 +102,13 @@ class FineTuneExperiment(Experiment):
 
 @dataclass(kw_only=True)
 class PreTrain(FineTuneExperiment):
+    prefix: str = "pt-query-ft"
     pretrain_method: PreTrainMethod = "meta"
     out_file_suffix: str = "pre_train_few_shot_hpsearch"
 
 
 @dataclass(kw_only=True)
 class RankFusion(Experiment):
+    prefix: str = "rf"
     num_samples: int
     result_files: List[str]
