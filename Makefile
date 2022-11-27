@@ -86,8 +86,9 @@ query-ft:
 pre-train-query-ft:
 	python inc_rel/pre_train.py $(args)
 
+## 		Fuse two or more rankings together.
 rank-fusion:
-	@echo dataset=$(dataset)
+	python inc_rel/rank_fusion.py $(args)
 
 # COLORS
 GREEN  := $(shell tput -Txterm setaf 2)
