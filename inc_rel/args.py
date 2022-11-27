@@ -101,5 +101,6 @@ class PreTrain(FineTuneExperiment):
 
 
 @dataclass(kw_only=True)
-class RankFusion:
-    pass
+class RankFusion(Experiment):
+    num_samples: int
+    result_files: List[str]
