@@ -3,8 +3,8 @@
 🚧 🚧 🚧 Code under construction 🚧 🚧 🚧 
 
 ## Requirements
-- python (tested with v3.8.2)
-- docker (for elasticsearch)
+- python 3.10+
+- if docker is availbale, elasticsearch will be run in a container, else the bare metal version will be started.
 ## Setup
 1. Setup your python virtual environment, for example:
     ```shell
