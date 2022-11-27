@@ -1,6 +1,6 @@
 # Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking
 
-🚧 🚧 🚧 Code under construction 🚧 🚧 🚧 
+This repository contains the code for our EMNLP 2022 paper [_Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking_](https://arxiv.org/abs/2210.10695).
 
 ## Requirements
 - python 3.10+
