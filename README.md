@@ -33,27 +33,27 @@ The following commands run the experiments using the default parameters. For the
 ### 2nd Stage Retrieval and Query Expansion
 Creating the index the last step in the [Setup](#setup) also runs the experiments over the second stage retrieval. By default, the query is expanded with `[4, 8, 16, 32, 64]` terms using ElasticSearchs [MoreLikeThis](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html) query.
 
-## kNN
+### kNN
 ```
 make knn args="--dataset <dataset>"
 ```
 
-## Zero-Shot
+### Zero-Shot
 ```
 make knn args="--dataset <dataset> --num_samples <num_samples>"
 ```
 
-## Query Fine-Tuning
+### Query Fine-Tuning
 ```
 make args="--dataset <dataset> --num_samples <num_samples>"
 ```
 
-## Meta-Learning + Query Fine-Tuning
+### Meta-Learning + Query Fine-Tuning
 ```
 make args="--dataset <dataset> --num_samples <num_samples>"
 ```
 
-## Rank-Fusion
+### Rank-Fusion
 ```
 make args="--dataset <dataset> --num_samples <num_samples> --result_files <path to first result file> <path to second result file> 
 ```
