@@ -55,7 +55,9 @@ def main(args):
                     eval_annotations=annotations["valid"],
                     epochs=args.epochs,
                     learning_rate=learning_rate,
-                    exp_dir=os.path.join(args.exp_path, f"lr-{learning_rate:.8f}"),
+                    exp_dir=os.path.join(
+                        args.exp_path, f"s{seed}_lr-{learning_rate:.8f}"
+                    ),
                     selection_metric=args.metric,
                 )
                 lr2best_metric[learning_rate] = best_metric
@@ -68,7 +70,7 @@ def main(args):
         print(f"Pre-Train best LR={best_lr} {args.metric}={lr2best_metric[best_lr]:.4}")
 
         for learning_rate in args.learning_rates:
-            exp_dir = os.path.join(args.exp_path, f"lr-{learning_rate:.8f}")
+            exp_dir = os.path.join(args.exp_path, f"s{seed}_lr-{learning_rate:.8f}")
             if learning_rate == best_lr:
                 best_exp_dir = os.path.join(args.exp_path, "best")
                 os.rename(exp_dir, best_exp_dir)
