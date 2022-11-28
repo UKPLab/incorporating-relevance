@@ -127,7 +127,7 @@ class ZeroShot(Experiment):
 
 @dataclass(kw_only=True)
 class KNNIndex(Experiment):
-    num_samples: List[int] = [2, 4, 8]
+    num_samples: List[int] = field(default_factory=lambda: [2, 4, 8])
     exp_name: str = "knn"
     model: str = "sentence-transformers/all-MiniLM-L6-v2"
 
