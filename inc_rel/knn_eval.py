@@ -170,10 +170,14 @@ def main(args):
         split2metric = defaultdict(list)
         for seed in args.seeds:
             for split in args.splits:
+                with open(
+                    os.path.join(args.data_path, f"k{k}", f"s{seed}", f"{split}.json")
+                ) as fh:
+                    split_seed = json.load(fh)
+
                 for exp_name, result in results.items():
-                    topic_ids = list(args.topic_ids_split_seed[split, seed].keys())
                     split_seed_eval_acc = eval.accumulate_results(
-                        result, topic_ids=topic_ids
+                        result, topic_ids=list(split_seed.keys())
                     )
 
                     _, sim_name, fn_name = exp_name
