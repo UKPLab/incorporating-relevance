@@ -47,9 +47,11 @@ class Experiment:
 
     @property
     def exp_path(self) -> str:
-        return os.path.join(
+        _exp_path = os.path.join(
             self.dataset_settings.data_path, "experiments", self.exp_name
         )
+        os.makedirs(_exp_path, exist_ok=True)
+        return _exp_path
 
     @property
     def bm25_results(self) -> Dict:
