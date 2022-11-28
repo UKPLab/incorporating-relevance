@@ -27,7 +27,7 @@ class PreTrainMethod(str, Enum):
 
 @dataclass(kw_only=True)
 class Experiment:
-    prefix: str
+    exp_name: str
     dataset: str
     num_samples: int
     seeds: List[int] = field(default_factory=lambda: [0, 1, 2])
@@ -47,7 +47,9 @@ class Experiment:
 
     @property
     def exp_path(self) -> str:
-        return os.path.join(self.dataset_settings.data_path, "experiments", self.prefix)
+        return os.path.join(
+            self.dataset_settings.data_path, "experiments", self.exp_name
+        )
 
     @property
     def bm25_results(self) -> Dict:
@@ -107,7 +109,7 @@ class Experiment:
 
 @dataclass(kw_only=True)
 class ZeroShot(Experiment):
-    prefix: str = "zero-shot"
+    exp_name: str = "zero-shot"
     num_samples: int
     model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     model_ctx: Union[SentenceTransformer, None] = None
@@ -123,7 +125,7 @@ class ZeroShot(Experiment):
 
 
 class KNN(Experiment):
-    prefix: str = "knn"
+    exp_name: str = "knn"
 
 
 @dataclass(kw_only=True)
@@ -138,7 +140,7 @@ class KNNSimilarities(KNN):
 
 @dataclass(kw_only=True)
 class FineTuneExperiment(Experiment):
-    prefix: str = "query-ft"
+    exp_name: str = "query-ft"
     num_samples: int
     model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     ft_params: FTParams = "bias"
@@ -164,12 +166,12 @@ class FineTuneExperiment(Experiment):
 
 @dataclass(kw_only=True)
 class PreTrain(FineTuneExperiment):
-    prefix: str = "pt-query-ft"
+    exp_name: str = "pt-query-ft"
     pretrain_method: PreTrainMethod = "meta"
 
 
 @dataclass(kw_only=True)
 class RankFusion(Experiment):
-    prefix: str = "rf"
+    exp_name: str = "rf"
     num_samples: int
     result_files: List[str]
