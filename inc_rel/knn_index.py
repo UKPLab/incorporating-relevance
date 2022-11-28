@@ -11,7 +11,7 @@ from sentence_transformers import SentenceTransformer
 def main(args):
 
     docs = {}
-    for k in [2, 4, 8]:
+    for k in args.num_samples:
         base_path = os.path.join(args.data_path, f"k{k}")
         docs_file = os.path.join(base_path, f"expansion_docs_16.json")
         with open(docs_file) as fh:

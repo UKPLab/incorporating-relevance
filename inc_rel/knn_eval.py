@@ -57,7 +57,7 @@ def main(args):
         similarities = json.load(fh)
     similarities = {ast.literal_eval(k): v for k, v in similarities.items()}
 
-    for k in [2, 4, 8]:
+    for k in args.num_samples:
         with open(
             os.path.join(args.data_path, f"k{k}", f"expansion_results_16.json")
         ) as fh:

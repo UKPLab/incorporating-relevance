@@ -27,9 +27,9 @@ class PreTrainMethod(str, Enum):
 
 @dataclass(kw_only=True)
 class Experiment:
-    exp_name: str
-    dataset: str
-    num_samples: int
+    exp_name: str = "exp"
+    dataset: str = list(dataset_settings_cls.keys())[0]
+    num_samples: int = 2
     seeds: List[int] = field(default_factory=lambda: [0, 1, 2])
     splits: List[str] = field(default_factory=lambda: ["train", "valid", "test"])
     bm25_size: int = 1000
@@ -112,7 +112,6 @@ class Experiment:
 @dataclass(kw_only=True)
 class ZeroShot(Experiment):
     exp_name: str = "zero-shot"
-    num_samples: int
     model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     model_ctx: Union[SentenceTransformer, None] = None
     scoring_fn: ScoringFunction = "cos"
@@ -127,6 +126,7 @@ class ZeroShot(Experiment):
 
 
 class KNN(Experiment):
+    num_samples: List[int] = [2, 4, 8]
     exp_name: str = "knn"
 
 
@@ -143,7 +143,6 @@ class KNNSimilarities(KNN):
 @dataclass(kw_only=True)
 class FineTuneExperiment(Experiment):
     exp_name: str = "query-ft"
-    num_samples: int
     model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     ft_params: FTParams = "bias"
     eval_batch_size: int = 32
@@ -175,5 +174,4 @@ class PreTrain(FineTuneExperiment):
 @dataclass(kw_only=True)
 class RankFusion(Experiment):
     exp_name: str = "rf"
-    num_samples: int
     result_files: List[str]
