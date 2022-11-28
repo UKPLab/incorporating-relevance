@@ -40,7 +40,7 @@ def main(args):
         ) as pbar:
 
             pre_train_trainer = PreTrainTrainer(
-                model=args.model,
+                model_name=args.model,
                 ft_params=args.ft_params,
                 docs=args.bm25_docs,
                 inital_ranking=args.bm25_results,
