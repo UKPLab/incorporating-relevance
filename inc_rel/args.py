@@ -119,9 +119,9 @@ class ZeroShot(Experiment):
     @property
     def model_class(self) -> str:
         if self.model.startswith("cross-encoder"):
-            _model_class = "ce"
+            _model_class = CrossEncoder
         else:
-            _model_class = "bi"
+            _model_class = SentenceTransformer
         return _model_class
 
 
