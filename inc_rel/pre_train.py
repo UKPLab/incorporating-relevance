@@ -55,7 +55,7 @@ def main(args):
                     eval_annotations=annotations["valid"],
                     epochs=args.epochs,
                     learning_rate=learning_rate,
-                    exp_dir=os.path.join(args.exp_dir, f"lr-{learning_rate:.8f}"),
+                    exp_dir=os.path.join(args.exp_path, f"lr-{learning_rate:.8f}"),
                     selection_metric=args.metric,
                 )
                 lr2best_metric[learning_rate] = best_metric
@@ -119,7 +119,7 @@ def main(args):
                 update_pbar=False,
             )
             results_file = os.path.join(
-                args.exp_dir, f"k{args.num_samples}_s{seed}_{split}_results.json"
+                args.exp_path, f"k{args.num_samples}_s{seed}_{split}_results.json"
             )
             with open(results_file, "w") as fh:
                 json.dump(few_shot_results, fh, indent=4)
