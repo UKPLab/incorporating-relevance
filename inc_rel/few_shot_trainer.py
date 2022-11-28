@@ -21,7 +21,7 @@ class FewShotTrainer:
         model_name: str,
         ft_params: str,
         docs,
-        inital_ranking,
+        initial_ranking,
         ranking_evaluator: RerankingEvaluator,
         pbar,
         model_path: str = None,
@@ -30,7 +30,7 @@ class FewShotTrainer:
         self.model_name = model_name
         self.ft_params = ft_params
         self.docs = docs
-        self.inital_ranking = inital_ranking
+        self.initial_ranking = initial_ranking
         self.ranking_evaluator = ranking_evaluator
         self.pbar = pbar
         self.model_path = model_path
@@ -180,5 +180,5 @@ class FewShotTrainer:
             model=self.model,
             queries={annotations[0]["topic_id"]: annotations[0]["query"]},
             docs=self.docs,
-            inital_ranking=self.inital_ranking,
+            initial_ranking=self.initial_ranking,
         )

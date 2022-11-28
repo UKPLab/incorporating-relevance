@@ -34,7 +34,7 @@ class PreTrainTrainer:
         model_name: str,
         ft_params: str,
         docs,
-        inital_ranking,
+        initial_ranking,
         ranking_evaluator: RerankingEvaluator,
         meta,
         pbar,
@@ -43,7 +43,7 @@ class PreTrainTrainer:
         self.model_name = model_name
         self.ft_params = ft_params
         self.docs = docs
-        self.inital_ranking = inital_ranking
+        self.initial_ranking = initial_ranking
         self.ranking_evaluator = ranking_evaluator
         self.meta = meta
         self.pbar = pbar
@@ -398,7 +398,7 @@ class PreTrainTrainer:
             model=model,
             queries=queries,
             docs=self.docs,
-            inital_ranking=self.inital_ranking,
+            initial_ranking=self.initial_ranking,
         )
 
         if eval.accumulate_results(metrics)["mean"][selection_metric] > best_metric:

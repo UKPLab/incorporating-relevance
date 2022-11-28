@@ -21,7 +21,7 @@ def main(args):
         model_ctx=model_ctx,
         queries=args.topics,
         docs=args.bm25_docs,
-        inital_ranking=args.bm25_results,
+        initial_ranking=args.bm25_results,
         batch_size=128,
         show_progress_bar=False,
         scoring_fn=args.scoring_fn,

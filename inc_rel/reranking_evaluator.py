@@ -42,7 +42,7 @@ class RerankingEvaluator:
         model: Union[CrossEncoder, SentenceTransformer],
         queries: Dict[str, str],
         docs: Dict[str, str],
-        inital_ranking: Dict[str, Dict[str, float]],
+        initial_ranking: Dict[str, Dict[str, float]],
         model_ctx: SentenceTransformer = None,
         batch_size: int = 32,
         tokenizer=None,
@@ -69,7 +69,7 @@ class RerankingEvaluator:
                 disable=not show_progress_bar,
             ):
 
-                doc_ids = inital_ranking[topic_id].keys()
+                doc_ids = initial_ranking[topic_id].keys()
                 query_docs = [docs[doc_id] for doc_id in doc_ids]
                 if isinstance(model, CrossEncoder):
                     sentences = [[query, doc] for doc in query_docs]
