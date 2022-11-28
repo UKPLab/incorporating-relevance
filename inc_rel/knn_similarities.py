@@ -18,12 +18,8 @@ def main(args):
 
     embeddings = {}
     for name in ["queries", "annotations", "docs"]:
-        with open(
-            os.path.join(
-                args.data_path,
-                f"knn_{name}_{args.prefix}_embeddings.json",
-            )
-        ) as fh:
+        embeddings_path = os.path.join(args.exp_path, f"{name}_embeddings.json")
+        with open(embeddings_path) as fh:
             embeddings[name] = json.load(fh)
 
     with open(os.path.join(args.data_path, "annotations_8.json")) as fh:
@@ -31,9 +27,10 @@ def main(args):
 
     similarites = {}
     for k in [2, 4, 8]:
-        with open(
-            os.path.join(args.data_path, f"k{k}", f"expansion_results_16.json")
-        ) as fh:
+        expansion_results_path = os.path.join(
+            args.data_path, f"k{k}", f"expansion_results_16.json"
+        )
+        with open(expansion_results_path) as fh:
             expansion_results: Dict[Dict] = json.load(fh)
         for topic_id, doc_id2score in tqdm(
             expansion_results.items(),
@@ -85,16 +82,12 @@ def main(args):
                         similarites[key] = cos_sim[0, j].item()
                 else:
                     print(
-                        f"No new annot-doc pairs found for topic={topic_id} at k={k} for annot={i, annotation_doc_id}"
+                        "No new annot-doc pairs found for "
+                        f"topic={topic_id} at k={k} for annot={i, annotation_doc_id}"
                     )
 
-    with open(
-        os.path.join(
-            args.data_path,
-            f"knn_similarities_{args.prefix}.json",
-        ),
-        "w",
-    ) as fh:
+    similarites_path = os.path.join(args.exp_path, f"similarities.json")
+    with open(similarites_path, "w") as fh:
         json.dump({str(k): v for k, v in similarites.items()}, fh, indent=4)
 
 

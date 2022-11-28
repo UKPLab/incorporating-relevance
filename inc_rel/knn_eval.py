@@ -52,17 +52,10 @@ def aggregate_sim_collection(sims, fn):
 
 
 def main(args):
-    with open(
-        os.path.join(
-            args.data_path,
-            f"knn_similarities_{args.prefix}.json",
-        )
-    ) as fh:
+    similarities_path = os.path.join(args.exp_path, f"similarities.json")
+    with open(similarities_path) as fh:
         similarities = json.load(fh)
     similarities = {ast.literal_eval(k): v for k, v in similarities.items()}
-
-    with open(os.path.join(args.data_path, "qrels.json")) as fh:
-        qrels = json.load(fh)
 
     for k in [2, 4, 8]:
         with open(
@@ -74,7 +67,7 @@ def main(args):
             annotations: Dict[str, List[Dict]] = json.load(fh)
 
         query_only_sims = collect_similarities(
-            qrels,
+            args.qrels,
             annotations,
             similarities,
             expansion_results,
@@ -83,7 +76,7 @@ def main(args):
             relevant_or_non_relevant="relevant",
         )
         annot_only_sims = collect_similarities(
-            qrels,
+            args.qrels,
             annotations,
             similarities,
             expansion_results,
@@ -92,7 +85,7 @@ def main(args):
             relevant_or_non_relevant="relevant",
         )
         query_annot_sims = collect_similarities(
-            qrels,
+            args.qrels,
             annotations,
             similarities,
             expansion_results,
@@ -109,7 +102,7 @@ def main(args):
         ):
             for fn, fn_name in zip([sum, max], ["sum", "max"]):
                 sims_agg = aggregate_sim_collection(sim, fn=fn)
-                results[(k, sim_name, fn_name)] = RerankingEvaluator(qrels).eval(
+                results[(k, sim_name, fn_name)] = RerankingEvaluator(args.qrels).eval(
                     sims_agg
                 )
 
@@ -131,7 +124,7 @@ def main(args):
                 ]
 
         annot_non_rel_sims = collect_similarities(
-            qrels,
+            args.qrels,
             annotations,
             similarities,
             expansion_results,
@@ -146,7 +139,9 @@ def main(args):
             for topic_id in annot_non_rel_agg.keys():
                 for doc_id in annot_non_rel_agg[topic_id].keys():
                     sims_agg[topic_id][doc_id] -= annot_non_rel_agg[topic_id][doc_id]
-            results[(k, sim_name, fn_name)] = RerankingEvaluator(qrels).eval(sims_agg)
+            results[(k, sim_name, fn_name)] = RerankingEvaluator(args.qrels).eval(
+                sims_agg
+            )
             full_result[(k, sim_name, fn_name)] = [
                 {
                     "topic_id": topic_id,
@@ -163,18 +158,13 @@ def main(args):
                 }
                 for topic_id in sim.keys()
             ]
-            # results_acc = eval.accumulate_results(results)
 
         for key in full_result.keys():
             _k, sim_name, fn_name = key
-            with open(
-                os.path.join(
-                    args.data_path,
-                    f"k{_k}",
-                    f"knn_{args.prefix}_{sim_name}-{fn_name}_eval.json",
-                ),
-                "w",
-            ) as fh:
+            eval_file = os.path.join(
+                args.exp_path, f"k{_k}", f"{sim_name}-{fn_name}_eval.json"
+            )
+            with open(eval_file, "w") as fh:
                 json.dump(full_result[key], fh, indent=4)
 
         split2metric = defaultdict(list)
@@ -191,15 +181,11 @@ def main(args):
                     )
                     _, sim_name, fn_name = exp_name
 
-                    with open(
-                        os.path.join(
-                            args.data_path,
-                            f"k{k}",
-                            f"s{seed}",
-                            f"{split}_knn_{args.prefix}_{sim_name}-{fn_name}_eval_acc.json",
-                        ),
-                        "w",
-                    ) as fh:
+                    eval_acc_file = os.path.join(
+                        args.exp_path,
+                        f"k{k}_s{seed}_{split}_{sim_name}-{fn_name}_eval_acc.json",
+                    )
+                    with open(eval_acc_file, "w") as fh:
                         json.dump(split_seed_eval_acc, fh, indent=4)
                     if sim_name == "query_annot" and fn_name == "sum":
                         # works best

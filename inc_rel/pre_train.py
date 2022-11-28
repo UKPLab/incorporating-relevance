@@ -14,34 +14,15 @@ from utils import get_best_experiment
 
 def main(args):
 
-    base_path = os.path.join(args.data_path, f"k{args.num_samples}")
-    results_file = os.path.join(base_path, f"expansion_results_16.json")
-    docs_file = os.path.join(base_path, f"expansion_docs_16.json")
-
-    with open(results_file) as fh:
-        bm25_results = json.load(fh)
-    with open(docs_file) as fh:
-        bm25_docs = json.load(fh)
-    with open(os.path.join(args.data_path, "qrels.json")) as fh:
-        qrels = json.load(fh)
-    with open(os.path.join(args.data_path, "topics.json")) as fh:
-        topics = json.load(fh)
-
-    assert len(topics) == len(qrels) == len(bm25_results), (
-        len(topics),
-        len(qrels),
-        len(bm25_results),
-    )
-
     # only keep topics that ended up in the dataset
     topics = dict(
         filter(
-            lambda topic_id2query: topic_id2query[0] in bm25_results.keys(),
+            lambda topic_id2query: topic_id2query[0] in args.bm25_results.keys(),
             topics.items(),
         )
     )
 
-    ranking_evaluator = RerankingEvaluator(qrels)
+    ranking_evaluator = RerankingEvaluator(args.qrels)
     split2metric = defaultdict(list)
 
     for seed in args.seeds:
@@ -59,7 +40,7 @@ def main(args):
         results = []
         lr2best_metric = {}
         search_steps = args.epochs * len(args.learning_rates)
-        out_file = args.out_file.format(seed=seed)
+        hparam_results_file = args.hparam_results_file.format(seed=seed)
         with tqdm.tqdm(
             total=search_steps,
             ncols=100,
@@ -67,52 +48,37 @@ def main(args):
         ) as pbar:
 
             pre_train_trainer = PreTrainTrainer(
-                args.model,
-                args.ft_params,
-                bm25_docs,
-                bm25_results,
-                ranking_evaluator,
+                model=args.model,
+                ft_params=args.ft_params,
+                docs=args.bm25_docs,
+                inital_ranking=args.bm25_results,
+                ranking_evaluator=ranking_evaluator,
                 meta=args.pretrain_method == "meta",
                 pbar=pbar,
             )
 
             for learning_rate in args.learning_rates:
-                exp_dir = os.path.join(
-                    os.path.dirname(out_file),
-                    f"{args.prefix}-exp_{args.model_class}"
-                    f"_{args.ft_params}_{args.pretrain_method}"
-                    f"_lr-{learning_rate:.8f}",
-                )
                 result, best_epoch, best_metric = pre_train_trainer.train(
                     train_annotations=annotations["train"],
                     eval_annotations=annotations["valid"],
                     epochs=args.epochs,
                     learning_rate=learning_rate,
-                    exp_dir=exp_dir,
-                    selection_metric="ndcg_cut_20",
+                    exp_dir=os.path.join(args.exp_dir, f"lr-{learning_rate:.8f}"),
+                    selection_metric=args.metric,
                 )
                 lr2best_metric[learning_rate] = best_metric
                 results.append({"result": result, "best_epoch": best_epoch})
                 # write out results after each experiment
-                with open(out_file, "w") as fh:
+                with open(hparam_results_file, "w") as fh:
                     json.dump(results, fh, indent=4)
 
         best_lr = max(lr2best_metric, key=lr2best_metric.get)
         print(f"Pre-Train best LR={best_lr} {args.metric}={lr2best_metric[best_lr]:.4}")
 
         for learning_rate in args.learning_rates:
-            exp_dir = os.path.join(
-                os.path.dirname(out_file),
-                f"{args.prefix}-exp_{args.model_class}"
-                f"_{args.ft_params}_{args.pretrain_method}"
-                f"_lr-{learning_rate:.8f}",
-            )
+            exp_dir = os.path.join(args.exp_path, f"lr-{learning_rate:.8f}")
             if learning_rate == best_lr:
-                best_exp_dir = os.path.join(
-                    os.path.dirname(out_file),
-                    f"{args.prefix}-exp_{args.model_class}"
-                    f"_{args.ft_params}_{args.pretrain_method}",
-                )
+                best_exp_dir = os.path.join(args.exp_path, "best")
                 os.rename(exp_dir, best_exp_dir)
             else:
                 shutil.rmtree(exp_dir)
@@ -129,8 +95,8 @@ def main(args):
             few_shot_trainer = FewShotTrainer(
                 model_name=args.model,
                 ft_params=args.ft_params,
-                docs=bm25_docs,
-                inital_ranking=bm25_results,
+                docs=args.bm25_docs,
+                inital_ranking=args.bm25_results,
                 ranking_evaluator=ranking_evaluator,
                 pbar=pbar,
                 model_path=os.path.join(best_exp_dir, "model"),
@@ -145,7 +111,7 @@ def main(args):
                 )
                 results.extend(exp_results)
                 # write out results after each experiment
-                with open(out_file, "w") as fh:
+                with open(hparam_results_file, "w") as fh:
                     json.dump(results, fh, indent=4)
 
         # Get best model and eval on train/valid/test set
@@ -154,24 +120,16 @@ def main(args):
 
         for split in args.splits:
             few_shot_results = few_shot_trainer.train(
-                annotations[split],
-                best_epochs,
-                best_learning_rate,
+                topic2annotations=annotations[split],
+                epochs=best_epochs,
+                learning_rate=best_learning_rate,
                 iter_epochs=False,
                 update_pbar=False,
             )
-            with open(
-                os.path.join(
-                    args.data_path,
-                    f"k{args.num_samples}",
-                    f"s{seed}",
-                    (
-                        f"{split}_{args.model_class}_{args.ft_params}"
-                        f"_{args.pretrain_method}_pre_train_few_shot.json"
-                    ),
-                ),
-                "w",
-            ) as fh:
+            results_file = os.path.join(
+                args.exp_dir, f"k{args.num_samples}_s{seed}_{split}_results.json"
+            )
+            with open(results_file, "w") as fh:
                 json.dump(few_shot_results, fh, indent=4)
 
             mean_metric = 0

@@ -6,108 +6,52 @@ import simple_parsing
 from args import ZeroShot
 from eval import accumulate_results
 from reranking_evaluator import RerankingEvaluator
-from sentence_transformers import CrossEncoder, SentenceTransformer
 
 
 def main(args):
 
-    base_path = os.path.join(args.data_path, f"k{args.num_samples}")
-    results_file = os.path.join(base_path, f"expansion_results_16.json")
-    docs_file = os.path.join(base_path, f"expansion_docs_16.json")
-
-    with open(results_file) as fh:
-        bm25_results = json.load(fh)
-    with open(docs_file) as fh:
-        bm25_docs = json.load(fh)
-    with open(os.path.join(args.data_path, "qrels.json")) as fh:
-        qrels = json.load(fh)
-    with open(os.path.join(args.data_path, "topics.json")) as fh:
-        topics = json.load(fh)
-
-    assert len(topics) == len(qrels) == len(bm25_results), (
-        len(topics),
-        len(qrels),
-        len(bm25_results),
-    )
-
-    if args.model_class == "ce":
-        model_class = CrossEncoder
-    elif args.model_class == "bi":
-        model_class = SentenceTransformer
-    model = model_class(args.model)
+    model = args.model_class(args.model)
     if args.model_ctx is not None:
-        model_ctx = model_class(args.model_ctx)
+        model_ctx = args.model_class(args.model_ctx)
     else:
         model_ctx = None
 
-    eval_results, run = RerankingEvaluator(qrels)(
-        model,
+    eval_results, run = RerankingEvaluator(args.qrels)(
+        model=model,
         model_ctx=model_ctx,
-        queries=topics,
-        docs=bm25_docs,
-        inital_ranking=bm25_results,
+        queries=args.topics,
+        docs=args.bm25_docs,
+        inital_ranking=args.bm25_results,
         batch_size=128,
         show_progress_bar=False,
         scoring_fn=args.scoring_fn,
     )
 
-    # assert len(eval_results) == len(qrels)
-
-    exp_name = f"{args.prefix}_{args.model_class}"
-    with open(
-        os.path.join(
-            args.data_path,
-            f"k{args.num_samples}",
-            f"zero_shot_{exp_name}_eval.json",
-        ),
-        "w",
-    ) as fh:
+    eval_file = os.path.join(args.exp_path, f"k{args.num_samples}_eval.json")
+    with open(eval_file, "w") as fh:
         json.dump(eval_results, fh, indent=4)
+
+    eval_acc_file = os.path.join(args.exp_path, f"k{args.num_samples}_eval_acc.json")
     with open(
-        os.path.join(
-            args.data_path,
-            f"k{args.num_samples}",
-            f"zero_shot_{exp_name}_eval_acc.json",
-        ),
+        eval_acc_file,
         "w",
     ) as fh:
         json.dump(accumulate_results(eval_results), fh, indent=4)
-    with open(
-        os.path.join(
-            args.data_path,
-            f"k{args.num_samples}",
-            f"zero_shot_{exp_name}_results.json",
-        ),
-        "w",
-    ) as fh:
+
+    results_file = os.path.join(args.exp_path, f"k{args.num_samples}_results.json")
+    with open(results_file, "w") as fh:
         json.dump(run, fh, indent=4)
 
     split2metric = defaultdict(list)
     for seed in args.seeds:
         for split in args.splits:
-            with open(
-                os.path.join(
-                    args.data_path,
-                    f"k{args.num_samples}",
-                    f"s{seed}",
-                    f"{split}.json",
-                )
-            ) as fh:
-                split_seed = json.load(fh)
+            topic_ids = list(args.topic_ids_split_seed[split, seed].keys())
+            split_seed_eval_acc = accumulate_results(eval_results, topic_ids=topic_ids)
 
-            split_seed_eval_acc = accumulate_results(
-                eval_results, topic_ids=list(split_seed.keys())
+            split_seed_eval_acc_file = os.path.join(
+                args.exp_path, f"k{args.num_samples}_s{seed}_{split}_eval_acc.json"
             )
-
-            with open(
-                os.path.join(
-                    args.data_path,
-                    f"k{args.num_samples}",
-                    f"s{seed}",
-                    f"{split}_zero_shot_{exp_name}_eval_acc.json",
-                ),
-                "w",
-            ) as fh:
+            with open(split_seed_eval_acc_file, "w") as fh:
                 json.dump(split_seed_eval_acc, fh, indent=4)
 
             split2metric[split].append(split_seed_eval_acc["mean"][args.metric])

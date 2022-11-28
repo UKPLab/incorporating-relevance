@@ -43,10 +43,7 @@ def main(args):
         for name, id2doc in zip(
             ["queries", "annotations", "docs"], [queries, annotations, docs]
         ):
-            embeddings_path = os.path.join(
-                args.data_path,
-                f"knn_{name}_{args.prefix}_embeddings.json",
-            )
+            embeddings_path = os.path.join(args.exp_path, f"{name}_embeddings.json")
             if os.path.exists(embeddings_path):
                 print(f"{name} embeddings already exists.")
             else:

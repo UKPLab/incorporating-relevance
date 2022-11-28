@@ -27,37 +27,25 @@ def main(args):
             for rank, doc_id in enumerate(doc_to_score.keys(), start=1):
                 query_to_doc_to_scores[query_id][doc_id] += rank_fusion(rank)
 
-    with open(os.path.join(args.data_path, "qrels.json")) as fh:
-        qrels = json.load(fh)
-    ranking_evaluator = RerankingEvaluator(qrels)
+    ranking_evaluator = RerankingEvaluator(args.qrels)
     result = ranking_evaluator.eval(query_to_doc_to_scores)
 
     split2metric = defaultdict(list)
     for seed in args.seeds:
-        print(f"---seed={seed}---")
         for split in args.splits:
-            with open(
-                os.path.join(
-                    args.data_path, f"k{args.num_samples}", f"s{seed}", f"{split}.json"
-                )
-            ) as fh:
-                split_seed = json.load(fh)
 
-            split_seed_eval_acc = accumulate_results(
-                result, topic_ids=list(split_seed.keys())
+            topic_ids = list(args.topic_ids_split_seed[split, seed].keys())
+            split_seed_eval_acc = accumulate_results(result, topic_ids=topic_ids)
+
+            eval_acc_file = os.path.join(
+                args.exp_path, f"k{args.num_samples}_s{seed}_{split}_eval_acc.json"
             )
-
-            with open(
-                os.path.join(
-                    args.data_path,
-                    f"k{args.num_samples}",
-                    f"s{seed}",
-                    f"{split}_rank-fusion_{args.prefix}_eval_acc.json",
-                ),
-                "w",
-            ) as fh:
+            with open(eval_acc_file, "w") as fh:
                 json.dump(split_seed_eval_acc, fh, indent=4)
+
             split2metric[split].append(split_seed_eval_acc["mean"][args.metric])
+
+            print(f"---seed={seed}---")
             print(
                 f"k={args.num_samples:02d} split={split:5s} seed={seed:02d} "
                 f"{args.metric}={split_seed_eval_acc['mean'][args.metric]:.4f}"

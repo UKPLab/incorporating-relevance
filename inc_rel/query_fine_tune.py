@@ -12,34 +12,15 @@ from utils import get_best_experiment
 
 def main(args):
 
-    base_path = os.path.join(args.data_path, f"k{args.num_samples}")
-    results_file = os.path.join(base_path, f"expansion_results_16.json")
-    docs_file = os.path.join(base_path, f"expansion_docs_16.json")
-
-    with open(results_file) as fh:
-        bm25_results = json.load(fh)
-    with open(docs_file) as fh:
-        bm25_docs = json.load(fh)
-    with open(os.path.join(args.data_path, "qrels.json")) as fh:
-        qrels = json.load(fh)
-    with open(os.path.join(args.data_path, "topics.json")) as fh:
-        topics = json.load(fh)
-
-    assert len(topics) == len(qrels) == len(bm25_results), (
-        len(topics),
-        len(qrels),
-        len(bm25_results),
-    )
-
     # only keep topics that ended up in the dataset
     topics = dict(
         filter(
-            lambda topic_id2query: topic_id2query[0] in bm25_results.keys(),
+            lambda topic_id2query: topic_id2query[0] in args.bm25_results.keys(),
             topics.items(),
         )
     )
 
-    ranking_evaluator = RerankingEvaluator(qrels)
+    ranking_evaluator = RerankingEvaluator(args.qrels)
     split2metric = defaultdict(list)
     for seed in args.seeds:
         print(f"---seed={seed}---")
@@ -63,11 +44,11 @@ def main(args):
         ) as pbar:
 
             few_shot_trainer = FewShotTrainer(
-                args.model,
-                args.ft_params,
-                bm25_docs,
-                bm25_results,
-                ranking_evaluator,
+                model=args.model,
+                ft_params=args.ft_params,
+                docs=args.bm25_docs,
+                initial_ranking=args.bm25_results,
+                ranking_evaluator=ranking_evaluator,
                 pbar=pbar,
             )
 
@@ -78,7 +59,7 @@ def main(args):
                 )
                 results.extend(exp_results)
                 # write out results after each experiment
-                with open(args.out_file.format(seed=seed), "w") as fh:
+                with open(args.hparam_results_file.format(seed=seed), "w") as fh:
                     json.dump(results, fh, indent=4)
 
             best_epochs, best_learning_rate = get_best_experiment(
@@ -87,21 +68,17 @@ def main(args):
             print(f"Best Epoch={best_epochs}. Best LR={best_learning_rate}")
             for split in args.splits:
                 few_shot_results = few_shot_trainer.train(
-                    annotations[split],
-                    best_epochs,
-                    best_learning_rate,
+                    topic2annotations=annotations[split],
+                    epochs=best_epochs,
+                    learning_rate=best_learning_rate,
                     iter_epochs=False,
                     update_pbar=False,
                 )
-                with open(
-                    os.path.join(
-                        args.data_path,
-                        f"k{args.num_samples}",
-                        f"s{seed}",
-                        f"{split}_{args.model_class}_{args.ft_params}_16_few_shot.json",
-                    ),
-                    "w",
-                ) as fh:
+
+                results_file = os.path.join(
+                    args.exp_path, f"k{args.num_samples}_s{seed}_{split}_results.json"
+                )
+                with open(results_file, "w") as fh:
                     json.dump(few_shot_results, fh, indent=4)
 
                 mean_metric = 0

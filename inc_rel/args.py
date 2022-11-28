@@ -1,9 +1,10 @@
+import json
 import os
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Union
+from typing import Dict, List, Union
 
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import CrossEncoder, SentenceTransformer
 from settings import dataset_settings_cls
 
 
@@ -28,15 +29,80 @@ class PreTrainMethod(str, Enum):
 class Experiment:
     prefix: str
     dataset: str
+    num_samples: int
     seeds: List[int] = field(default_factory=lambda: [0, 1, 2])
     splits: List[str] = field(default_factory=lambda: ["train", "valid", "test"])
     bm25_size: int = 1000
     metric: str = "ndcg_cut_20"
 
     @property
+    def dataset_settings(self):
+        return dataset_settings_cls[self.dataset]()
+
+    @property
     def data_path(self) -> str:
-        dataset_settings = dataset_settings_cls[self.dataset]()
-        return os.path.join(dataset_settings.data_path, str(dataset_settings.bm25_size))
+        return os.path.join(
+            self.dataset_settings.data_path, str(self.dataset_settings.bm25_size)
+        )
+
+    @property
+    def exp_path(self) -> str:
+        return os.path.join(self.dataset_settings.data_path, "experiments", self.prefix)
+
+    @property
+    def bm25_results(self) -> Dict:
+        if not hasattr(self, "_bm25_results"):
+            file = os.path.join(
+                self.data_path, f"k{self.num_samples}", "expansion_results_16.json"
+            )
+            with open(file) as fh:
+                self._bm25_results = json.load(fh)
+
+        return self._bm25_results
+
+    @property
+    def bm25_docs(self) -> Dict:
+        if not hasattr(self, "_bm25_docs"):
+            file = os.path.join(self.data_path, "expansion_results_16.json")
+            with open(file) as fh:
+                self._bm25_docs = json.load(fh)
+
+        return self._bm25_docs
+
+    @property
+    def qrels(self) -> Dict:
+        if not hasattr(self, "_qrels"):
+            file = os.path.join(self.data_path, "qrels.json")
+            with open(file) as fh:
+                self._qrels = json.load(fh)
+
+        return self._qrels
+
+    @property
+    def topics(self) -> Dict:
+        if not hasattr(self, "_topics"):
+            file = os.path.join(self.data_path, "topics.json")
+            with open(file) as fh:
+                self._topics = json.load(fh)
+
+        return self._topics
+
+    @property
+    def topic_ids_split_seed(self) -> Dict:
+        if not hasattr(self, "_split_seed"):
+            self._split_seed = {}
+            for seed in self.seeds:
+                for split in self.splits:
+                    file = os.path.join(
+                        self.data_path,
+                        f"k{self.num_samples}",
+                        f"s{seed}",
+                        f"{split}.json",
+                    )
+                    with open(file) as fh:
+                        self._split_seed[split, seed] = json.load(fh)
+
+        return self._split_seed
 
 
 @dataclass(kw_only=True)
@@ -80,23 +146,19 @@ class FineTuneExperiment(Experiment):
     epochs: int = 8
     learning_rates: List[float] = field(default_factory=lambda: [2e-3, 2e-4, 2e-5])
 
-    out_file_suffix: str = "few_shot_hpsearch"
-
     @property
     def model_class(self) -> str:
         if self.model.startswith("cross-encoder"):
-            _model_class = "ce"
+            _model_class = CrossEncoder
         else:
-            _model_class = "bi"
+            _model_class = SentenceTransformer
         return _model_class
 
     @property
-    def out_file(self) -> str:
+    def hparam_results_file(self) -> str:
         return os.path.join(
-            self.data_path,
-            f"k{self.num_samples}",
-            f"s{{seed}}",
-            f"valid_{self.model_class}_{self.ft_params}_{self.out_file_suffix}.json",
+            self.exp_path,
+            f"k{self.num_samples}_s{{seed}}_valid_{self.ft_params}_hpsearch.json",
         )
 
 
@@ -104,7 +166,6 @@ class FineTuneExperiment(Experiment):
 class PreTrain(FineTuneExperiment):
     prefix: str = "pt-query-ft"
     pretrain_method: PreTrainMethod = "meta"
-    out_file_suffix: str = "pre_train_few_shot_hpsearch"
 
 
 @dataclass(kw_only=True)
