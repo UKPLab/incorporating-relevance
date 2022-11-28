@@ -162,7 +162,7 @@ def main(args):
         for key in full_result.keys():
             _k, sim_name, fn_name = key
             eval_file = os.path.join(
-                args.exp_path, f"k{_k}", f"{sim_name}-{fn_name}_eval.json"
+                args.exp_path, f"k{_k}_{sim_name}-{fn_name}_eval.json"
             )
             with open(eval_file, "w") as fh:
                 json.dump(full_result[key], fh, indent=4)
@@ -170,15 +170,12 @@ def main(args):
         split2metric = defaultdict(list)
         for seed in args.seeds:
             for split in args.splits:
-                with open(
-                    os.path.join(args.data_path, f"k{k}", f"s{seed}", f"{split}.json")
-                ) as fh:
-                    split_seed = json.load(fh)
-
                 for exp_name, result in results.items():
+                    topic_ids = list(args.topic_ids_split_seed[split, seed].keys())
                     split_seed_eval_acc = eval.accumulate_results(
-                        result, topic_ids=list(split_seed.keys())
+                        result, topic_ids=topic_ids
                     )
+
                     _, sim_name, fn_name = exp_name
 
                     eval_acc_file = os.path.join(
