@@ -12,14 +12,6 @@ from utils import get_best_experiment
 
 def main(args):
 
-    # only keep topics that ended up in the dataset
-    topics = dict(
-        filter(
-            lambda topic_id2query: topic_id2query[0] in args.bm25_results.keys(),
-            topics.items(),
-        )
-    )
-
     ranking_evaluator = RerankingEvaluator(args.qrels)
     split2metric = defaultdict(list)
     for seed in args.seeds:
