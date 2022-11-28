@@ -58,4 +58,5 @@ def main(args):
 
 if __name__ == "__main__":
     args = simple_parsing.parse(KNNIndex)
+    print(args)
     main(args)

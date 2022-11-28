@@ -93,4 +93,5 @@ def main(args):
 
 if __name__ == "__main__":
     args = simple_parsing.parse(KNNSimilarities)
+    print(args)
     main(args)

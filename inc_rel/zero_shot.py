@@ -70,4 +70,5 @@ def main(args):
 
 if __name__ == "__main__":
     args = simple_parsing.parse(ZeroShot)
+    print(args)
     main(args)

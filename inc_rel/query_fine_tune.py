@@ -106,4 +106,5 @@ def main(args):
 
 if __name__ == "__main__":
     args = simple_parsing.parse(FineTuneExperiment)
+    print(args)
     main(args)
