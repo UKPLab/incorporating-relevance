@@ -67,7 +67,9 @@ class Experiment:
     @property
     def bm25_docs(self) -> Dict:
         if not hasattr(self, "_bm25_docs"):
-            file = os.path.join(self.data_path, "expansion_results_16.json")
+            file = os.path.join(
+                self.data_path, f"k{self.num_samples}", "expansion_docs_16.json"
+            )
             with open(file) as fh:
                 self._bm25_docs = json.load(fh)
 
