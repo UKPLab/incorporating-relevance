@@ -72,7 +72,7 @@ def main(args):
         for learning_rate in args.learning_rates:
             exp_dir = os.path.join(args.exp_path, f"s{seed}_lr-{learning_rate:.8f}")
             if learning_rate == best_lr:
-                best_exp_dir = os.path.join(args.exp_path, "best")
+                best_exp_dir = os.path.join(args.exp_path, f"best-model-s{seed}")
                 os.rename(exp_dir, best_exp_dir)
             else:
                 shutil.rmtree(exp_dir)
