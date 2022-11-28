@@ -7,7 +7,7 @@ from typing import Dict, List
 
 import eval
 import simple_parsing
-from args import Experiment
+from args import KNNSimilarities
 from reranking_evaluator import RerankingEvaluator
 
 
@@ -206,5 +206,5 @@ def main(args):
 
 
 if __name__ == "__main__":
-    args = simple_parsing.parse(Experiment)
+    args = simple_parsing.parse(KNNSimilarities)
     main(args)
