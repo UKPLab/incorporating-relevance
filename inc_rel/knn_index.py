@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import simple_parsing
 import torch
-from args import KNNIndex
+from args import KNN
 from sentence_transformers import SentenceTransformer
 
 
@@ -57,6 +57,6 @@ def main(args):
 
 
 if __name__ == "__main__":
-    args = simple_parsing.parse(KNNIndex)
+    args = simple_parsing.parse(KNN)
     print(args)
     main(args)

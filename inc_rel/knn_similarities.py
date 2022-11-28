@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import numpy as np
 import simple_parsing
-from args import KNNSimilarities
+from args import KNN
 from sentence_transformers import util
 from tqdm.auto import tqdm
 
@@ -92,6 +92,6 @@ def main(args):
 
 
 if __name__ == "__main__":
-    args = simple_parsing.parse(KNNSimilarities)
+    args = simple_parsing.parse(KNN)
     print(args)
     main(args)

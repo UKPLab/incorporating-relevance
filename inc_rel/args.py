@@ -126,15 +126,10 @@ class ZeroShot(Experiment):
 
 
 @dataclass(kw_only=True)
-class KNNIndex(Experiment):
+class KNN(Experiment):
     num_samples: List[int] = field(default_factory=lambda: [2, 4, 8])
     exp_name: str = "knn"
     model: str = "sentence-transformers/all-MiniLM-L6-v2"
-
-
-@dataclass(kw_only=True)
-class KNNSimilarities(Experiment):
-    exp_name: str = "knn"
     scoring_fn: ScoringFunction = "cos"
 
 
