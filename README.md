@@ -6,6 +6,7 @@ This repository contains the code for our EMNLP 2022 paper [_Incorporating Relev
 - python 3.10+
 - if docker is availbale, elasticsearch will be run in a container, else the bare metal version will be started.
 ## Setup
+### Virtual Environment and Dependencies
 1. Setup your python virtual environment, for example:
     ```shell
     python -m venv .venv
@@ -18,11 +19,13 @@ This repository contains the code for our EMNLP 2022 paper [_Incorporating Relev
     ```shell
     make install-dev
     ```
-3. Download Datasets
+### Datasets and Preprocessing
+The paths where to store raw, preprocessed and experiments data can be modified in the `.env` file. Once these are set, run the following commands:
+1. Download Datasets
     ```shell
     make download
     ```
-4. Index corpora in elasticsearch.
+2. Index corpora in elasticsearch.
     ```
     make index
     ```
