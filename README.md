@@ -1,4 +1,9 @@
 # Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking
+<p align="center">
+<a href="https://arxiv.org/abs/2210.10695">
+    <img alt="SQuARE v1" src="https://img.shields.io/badge/arXiv%202210.10695-b31b1b.svg">
+</a>
+</p>
 
 This repository contains the code for our EMNLP 2022 paper [_Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking_](https://arxiv.org/abs/2210.10695).
 
