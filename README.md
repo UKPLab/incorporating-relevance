@@ -1,7 +1,10 @@
 # Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking
 <p align="center">
+<a href="https://aclanthology.org/2022.emnlp-main.614/">
+    <img alt="ACL Anthology Badge" src="https://img.shields.io/badge/EMNLP-2022-b31b1b.svg">
 <a href="https://arxiv.org/abs/2210.10695">
-    <img alt="SQuARE v1" src="https://img.shields.io/badge/arXiv%202210.10695-b31b1b.svg">
+    <img alt="Arxiv Badge" src="https://img.shields.io/badge/arXiv-%202210.10695-b31b1b.svg">
+</a>
 </a>
 </p>
 
@@ -84,12 +87,18 @@ This project is maintained by [Tim Baumgärtner](https://github.com/timbmg).
 If you find this work useful, please considering citing the following paper: [https://arxiv.org/abs/2210.10695](https://arxiv.org/abs/2210.10695)
 ```bibtex
 @inproceedings{baumgartner-etal-2022-incorporating,
-  doi = {10.48550/ARXIV.2210.10695},
-  url = {https://arxiv.org/abs/2210.10695},
-  author = {Baumgärtner, Tim and Ribeiro, Leonardo F. R. and Reimers, Nils and Gurevych, Iryna},
-  title = {Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking},
-  publisher = {arXiv},
-  year = {2022},
+    title = "Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking",
+    author = {Baumg{\"a}rtner, Tim  and
+      Ribeiro, Leonardo F. R.  and
+      Reimers, Nils  and
+      Gurevych, Iryna},
+    booktitle = "Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing",
+    month = dec,
+    year = "2022",
+    address = "Abu Dhabi, United Arab Emirates",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2022.emnlp-main.614",
+    pages = "8988--9005",
 }
 ```
 
