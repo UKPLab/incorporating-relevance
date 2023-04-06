@@ -1,10 +1,13 @@
 # Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking
 <p align="center">
 <a href="https://aclanthology.org/2022.emnlp-main.614/">
-    <img alt="ACL Anthology Badge" src="https://img.shields.io/badge/EMNLP-2022-b31b1b.svg">
-<a href="https://arxiv.org/abs/2210.10695">
-    <img alt="Arxiv Badge" src="https://img.shields.io/badge/arXiv-%202210.10695-b31b1b.svg">
+    <img alt="Paper Badge" src="https://img.shields.io/badge/Paper-b31b1b.svg">
 </a>
+<a href="https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-slides-emnlp-2022.pdf">
+    <img alt="Slides Badge" src="https://img.shields.io/badge/Slides-b31b1b.svg">
+</a>
+<a href="https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-poster-emnlp-2022.pdf">
+    <img alt="Slides Badge" src="https://img.shields.io/badge/Poster-b31b1b.svg">
 </a>
 </p>
 
