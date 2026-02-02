@@ -1,15 +1,10 @@
 # Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking
-<p align="center">
-<a href="https://aclanthology.org/2022.emnlp-main.614/">
-    <img alt="Paper Badge" src="https://img.shields.io/badge/Paper-b31b1b.svg">
-</a>
-<a href="https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-slides-emnlp-2022.pdf">
-    <img alt="Slides Badge" src="https://img.shields.io/badge/Slides-b31b1b.svg">
-</a>
-<a href="https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-poster-emnlp-2022.pdf">
-    <img alt="Slides Badge" src="https://img.shields.io/badge/Poster-b31b1b.svg">
-</a>
-</p>
+
+<div align="center">
+
+[![ACL](https://img.shields.io/badge/EMNLP%202022-Paper-ED1C24)]([https://arxiv.org/abs/2210.10695](https://aclanthology.org/2022.emnlp-main.614/))
+[![GitHub](https://img.shields.io/badge/GitHub-Code-black?logo=github)](https://github.com/UKPLab/incorporating-relevance)
+[![Slides](https://img.shields.io/badge/Presentation-Slides-075190?logo=reveal.js&logoColor=white)](https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-poster-emnlp-2022.pdf)
 
 This repository contains the code for our EMNLP 2022 paper [_Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking_](https://aclanthology.org/2022.emnlp-main.614).
 
