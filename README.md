@@ -4,7 +4,9 @@
 
 [![ACL](https://img.shields.io/badge/EMNLP%202022-Paper-ED1C24)](https://aclanthology.org/2022.emnlp-main.614/)
 [![GitHub](https://img.shields.io/badge/GitHub-Code-black?logo=github)](https://github.com/UKPLab/incorporating-relevance)
-[![Slides](https://img.shields.io/badge/Presentation-Slides-075190?logo=reveal.js&logoColor=white)](https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-poster-emnlp-2022.pdf)
+[![Slides](https://img.shields.io/badge/Slides-075190?logo=reveal.js&logoColor=white)](https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-slides-emnlp-2022.pdf)
+[![Poster](https://img.shields.io/badge/Poster-075190?logo=reveal.js&logoColor=white)](https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-poster-emnlp-2022.pdf)
+</div>
 
 This repository contains the code for our EMNLP 2022 paper [_Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking_](https://aclanthology.org/2022.emnlp-main.614).
 
