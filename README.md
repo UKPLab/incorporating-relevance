@@ -1,13 +1,16 @@
 # Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking
 <p align="center">
 <a href="https://aclanthology.org/2022.emnlp-main.614/">
-    <img alt="Paper Badge" src="https://img.shields.io/badge/Paper-b31b1b.svg">
+    <img alt="Paper" src="https://img.shields.io/badge/Paper-EMNLP%202022-B31B1B.svg">
+</a>
+<a href="https://github.com/timbmg/incorporating-relevance">
+    <img alt="Code" src="https://img.shields.io/badge/Code-GitHub-181717.svg?logo=github&logoColor=white">
 </a>
 <a href="https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-slides-emnlp-2022.pdf">
-    <img alt="Slides Badge" src="https://img.shields.io/badge/Slides-b31b1b.svg">
+    <img alt="Slides" src="https://img.shields.io/badge/Slides-PDF-B31B1B.svg">
 </a>
 <a href="https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-poster-emnlp-2022.pdf">
-    <img alt="Slides Badge" src="https://img.shields.io/badge/Poster-b31b1b.svg">
+    <img alt="Poster" src="https://img.shields.io/badge/Poster-PDF-B31B1B.svg">
 </a>
 </p>
 

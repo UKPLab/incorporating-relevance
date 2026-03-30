@@ -1338,6 +1338,78 @@
       color: var(--text);
     }
 
+    /* ==================== GETTING STARTED ==================== */
+    .gs-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .gs-step {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(30,58,95,0.08);
+      border: 1px solid rgba(30,58,95,0.08);
+    }
+
+    .gs-step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .gs-step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .gs-step-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .gs-terminal {
+      background: #1a1b2e;
+    }
+
+    .gs-terminal-bar {
+      background: #2a2a3e;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gs-terminal pre {
+      padding: 20px 24px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.75;
+      color: #e2e8f0;
+    }
+
+    .gs-terminal pre code {
+      background: none;
+      padding: 0;
+    }
+
+    .gs-comment {
+      color: #6b7db3;
+    }
+
     /* ==================== BIBTEX ==================== */
     .bibtex-wrapper {
       position: relative;
@@ -1656,6 +1728,7 @@
         <a href="#contributions">Contributions</a>
         <a href="#datasets">Datasets</a>
         <a href="#results">Results</a>
+        <a href="#getting-started">Code</a>
         <a href="#citation">Citation</a>
       </div>
       <button class="slide-toggle-btn" id="slideToggle" onclick="toggleSlideMode()">
@@ -2136,6 +2209,73 @@
         </table>
       </div>
       <p class="table-note">nDCG@20 test set results averaged over three seeds and feedback documents <em>k</em> &isin; {2, 4, 8}. Best per column in <strong>bold</strong>. RF = Rank Fusion, QFT = Query Fine-Tuning.</p>
+    </div>
+  </section>
+
+  <!-- Getting Started -->
+  <section class="section" id="getting-started">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label">Code</div>
+        <h2><span class="title-gradient">Getting Started</span></h2>
+      </div>
+      <div class="gs-steps fade-up stagger-1">
+
+        <div class="gs-step">
+          <div class="gs-step-header">
+            <span class="gs-step-num">1</span>
+            <span class="gs-step-title">Setup Environment</span>
+          </div>
+          <div class="gs-terminal">
+            <div class="gs-terminal-bar"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+            <pre><code><span class="gs-comment"># Create and activate virtual environment</span>
+python -m venv .venv
+source .venv/bin/activate
+
+<span class="gs-comment"># Install dependencies</span>
+make install</code></pre>
+          </div>
+        </div>
+
+        <div class="gs-step">
+          <div class="gs-step-header">
+            <span class="gs-step-num">2</span>
+            <span class="gs-step-title">Download &amp; Index Data</span>
+          </div>
+          <div class="gs-terminal">
+            <div class="gs-terminal-bar"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+            <pre><code><span class="gs-comment"># Download datasets (Robust04, TREC-Covid, TREC-News, Touché)</span>
+make download
+
+<span class="gs-comment"># Index corpora in Elasticsearch (starts Docker if available)</span>
+make index</code></pre>
+          </div>
+        </div>
+
+        <div class="gs-step">
+          <div class="gs-step-header">
+            <span class="gs-step-num">3</span>
+            <span class="gs-step-title">Run Experiments</span>
+          </div>
+          <div class="gs-terminal">
+            <div class="gs-terminal-bar"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+            <pre><code><span class="gs-comment"># kNN re-ranking</span>
+make knn args="--dataset robust04"
+
+<span class="gs-comment"># Cross-Encoder with Query Fine-Tuning</span>
+make args="--dataset robust04 --num_samples 4"
+
+<span class="gs-comment"># CE MAML + Query Fine-Tuning</span>
+make args="--dataset robust04 --num_samples 4 --meta_learning"
+
+<span class="gs-comment"># Rank Fusion</span>
+make args="--dataset robust04 --num_samples 4 \
+  --result_files results/knn.json results/ce.json"</code></pre>
+          </div>
+        </div>
+
+      </div>
+      <p class="table-note fade-up stagger-2">Full argument reference in <a href="https://github.com/timbmg/incorporating-relevance/blob/main/inc_rel/args.py" target="_blank" rel="noopener" style="color:var(--accent)">inc_rel/args.py</a>. Requires Python 3.10+ and Elasticsearch (Docker recommended).</p>
     </div>
   </section>
 
