@@ -356,6 +356,16 @@
       box-shadow: 0 4px 16px rgba(30,58,95,0.15);
     }
 
+    button.link-btn {
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    button.link-btn.copied {
+      border-color: #10b981;
+      color: #10b981;
+    }
+
     .link-btn i {
       font-size: 1.05rem;
       opacity: 0.7;
@@ -1740,7 +1750,7 @@
   <!-- Hero -->
   <section class="hero">
     <div class="container">
-      <h1 class="paper-title"><span class="title-gradient">Incorporating Relevance Feedback</span> for Information-Seeking Retrieval using Few-Shot Document Re-Ranking</h1>
+      <h1 class="paper-title"><span class="title-gradient">Incorporating Relevance Feedback</span><br>for Information-Seeking Retrieval<br>using Few-Shot Document Re-Ranking</h1>
       <p class="hero-subtitle">Re-ranking search results using a handful of user-selected relevant documents, via few-shot learning and meta-learning.</p>
       <div class="authors">
         <span class="author-name"><a href="https://scholar.google.com/citations?user=pwDGJYsAAAAJ" target="_blank" rel="noopener">Tim Baumg&auml;rtner</a><sup>1</sup></span>,
@@ -1774,6 +1784,9 @@
         <a href="https://public.ukp.informatik.tu-darmstadt.de/baumgaertner/emnlp-2022/inc-rel-poster-emnlp-2022.pdf" class="link-btn" target="_blank" rel="noopener">
           <i class="fa-solid fa-image"></i> Poster
         </a>
+        <button class="link-btn" id="hero-cite-btn" onclick="copyBibtex('hero-cite-btn')">
+          <i class="fa-solid fa-quote-right"></i> Cite
+        </button>
       </div>
     </div>
   </section>
@@ -2293,7 +2306,7 @@ make args="--dataset robust04 --num_samples 4 \
           <span class="code-dot yellow"></span>
           <span class="code-dot green"></span>
         </div>
-        <button class="copy-btn" id="copy-btn" onclick="copyBibtex()">
+        <button class="copy-btn" id="copy-btn" onclick="copyBibtex('copy-btn')">
           <i class="fa-regular fa-copy"></i> Copy
         </button>
         <pre><code id="bibtex">@inproceedings{baumgartner-etal-2022-incorporating,
@@ -2389,14 +2402,15 @@ make args="--dataset robust04 --num_samples 4 \
     });
 
     // Copy BibTeX
-    function copyBibtex() {
+    function copyBibtex(btnId) {
       var bibtex = document.getElementById('bibtex').textContent;
       navigator.clipboard.writeText(bibtex).then(function() {
-        var btn = document.getElementById('copy-btn');
+        var btn = document.getElementById(btnId || 'copy-btn');
+        var orig = btn.innerHTML;
         btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
         btn.classList.add('copied');
         setTimeout(function() {
-          btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+          btn.innerHTML = orig;
           btn.classList.remove('copied');
         }, 2000);
       });
