@@ -1843,7 +1843,7 @@
             <h3>kNN Re-Ranking <small>Similarity-based, no training</small></h3>
           </div>
           <div class="method-card-body" style="display:flex;gap:24px;align-items:stretch">
-            <div style="flex:1;min-width:0;display:flex;align-items:center;background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:8px"><svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block"><rect width="420" height="260" rx="10" fill="#f8fafc"/><pattern id="d5" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="0.7" fill="#cbd5e1"/></pattern><rect width="420" height="260" rx="10" fill="url(#d5)"/><circle cx="90" cy="200" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="340" cy="200" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="370" cy="120" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="50" cy="100" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="160" cy="210" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="310" cy="55" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="215" cy="105" r="14" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/><circle cx="215" cy="105" r="22" fill="none" stroke="#0d9488" stroke-width="1" opacity="0.15"/><circle cx="215" cy="105" r="30" fill="none" stroke="#0d9488" stroke-width="0.5" opacity="0.08"/><text x="215" y="109" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#0f766e">d&#x2081;</text><circle cx="85" cy="155" r="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/><text x="85" y="159" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="600" fill="#94a3b8">d&#x2082;</text><polygon points="120,70 124,80 135,80 127,87 130,98 120,92 110,98 113,87 105,80 116,80" fill="#1e3a5f" stroke="#142a45" stroke-width="1"/><text x="120" y="115" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f">Query q</text><circle cx="280" cy="80" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><circle cx="300" cy="110" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><circle cx="265" cy="115" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><text x="282" y="145" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#16a34a">Feedback R&#x207A;</text><line x1="130" y1="75" x2="202" y2="100" stroke="#1e3a5f" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/><line x1="270" y1="82" x2="228" y2="100" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/><line x1="290" y1="108" x2="228" y2="105" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4"/><line x1="258" y1="112" x2="225" y2="107" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4"/><line x1="118" y1="85" x2="88" y2="145" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="6,4" opacity="0.2"/><line x1="265" y1="118" x2="95" y2="152" stroke="#16a34a" stroke-width="1" stroke-dasharray="6,4" opacity="0.12"/><rect x="186" y="55" width="60" height="20" rx="10" fill="#0d9488"/><text x="216" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#fff">High score</text><rect x="62" y="175" width="48" height="18" rx="9" fill="#94a3b8" opacity="0.6"/><text x="86" y="187" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="600" fill="#fff">Low score</text></svg></div>
+            <div style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:12px"><svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block"><rect width="420" height="240" rx="10" fill="#f8fafc"/><pattern id="d5" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="0.7" fill="#cbd5e1"/></pattern><rect width="420" height="240" rx="10" fill="url(#d5)"/><circle cx="90" cy="190" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="340" cy="185" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="370" cy="115" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="50" cy="95" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="160" cy="200" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="310" cy="50" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="215" cy="105" r="14" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/><circle cx="215" cy="105" r="22" fill="none" stroke="#0d9488" stroke-width="1" opacity="0.15"/><circle cx="215" cy="105" r="30" fill="none" stroke="#0d9488" stroke-width="0.5" opacity="0.08"/><text x="215" y="109" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#0f766e">d&#x2081;</text><circle cx="85" cy="155" r="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/><text x="85" y="159" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="600" fill="#94a3b8">d&#x2082;</text><polygon points="120,70 124,80 135,80 127,87 130,98 120,92 110,98 113,87 105,80 116,80" fill="#1e3a5f" stroke="#142a45" stroke-width="1"/><text x="120" y="115" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f">Query q</text><circle cx="280" cy="80" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><circle cx="300" cy="110" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><circle cx="265" cy="115" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><text x="282" y="145" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#16a34a">Feedback R&#x207A;</text><line x1="130" y1="75" x2="202" y2="100" stroke="#1e3a5f" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/><line x1="270" y1="82" x2="228" y2="100" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/><line x1="290" y1="108" x2="228" y2="105" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4"/><line x1="258" y1="112" x2="225" y2="107" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4"/><line x1="118" y1="85" x2="88" y2="145" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="6,4" opacity="0.2"/><line x1="265" y1="118" x2="95" y2="152" stroke="#16a34a" stroke-width="1" stroke-dasharray="6,4" opacity="0.12"/><rect x="186" y="55" width="60" height="20" rx="10" fill="#0d9488"/><text x="216" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#fff">High score</text><rect x="62" y="175" width="48" height="18" rx="9" fill="#94a3b8" opacity="0.6"/><text x="86" y="187" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="600" fill="#fff">Low score</text></svg></div>
             <div style="flex:1;min-width:0">
               <p>Score each candidate by cosine similarity to the query and relevant feedback documents. No training needed&mdash;uses precomputed MiniLM embeddings.</p>
               <div class="eq-block"><span class="eq">s<sub>i</sub> = f(d<sub>i</sub>, q) + &sum;<sub>d<sub>j</sub>&thinsp;&isin;&thinsp;R<sup>+</sup></sub> f(d<sub>i</sub>, d<sub>j</sub>)</span><span class="eq-num">(1)</span></div>
@@ -1858,7 +1858,102 @@
             <h3>CE MAML + Query FT <small>Meta-learned Cross-Encoder</small></h3>
           </div>
           <div class="method-card-body" style="display:flex;gap:24px;align-items:stretch">
-            <div style="flex:1;min-width:0;display:flex;align-items:center;background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:8px"><svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block"><rect width="420" height="260" rx="10" fill="#f8fafc"/><pattern id="d6" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="0.7" fill="#cbd5e1"/></pattern><rect width="420" height="260" rx="10" fill="url(#d6)"/><ellipse cx="210" cy="130" rx="180" ry="110" fill="none" stroke="#e2e8f0" stroke-width="1"/><ellipse cx="210" cy="130" rx="145" ry="88" fill="none" stroke="#e2e8f0" stroke-width="1"/><ellipse cx="210" cy="130" rx="110" ry="66" fill="none" stroke="#e2e8f0" stroke-width="1"/><ellipse cx="210" cy="130" rx="75" ry="44" fill="none" stroke="#cbd5e1" stroke-width="1"/><ellipse cx="210" cy="130" rx="40" ry="22" fill="none" stroke="#94a3b8" stroke-width="1"/><circle cx="155" cy="95" r="18" fill="#0d9488" opacity="0.06" stroke="#0d9488" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/><text x="155" y="75" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#0d9488">Task T&#x2081;</text><circle cx="275" cy="105" r="18" fill="#1e3a5f" opacity="0.06" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/><text x="275" y="85" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#1e3a5f">Task T&#x2082;</text><circle cx="220" cy="175" r="18" fill="#d97706" opacity="0.06" stroke="#d97706" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/><text x="220" y="199" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#d97706">Task T&#x2083;</text><circle cx="210" cy="125" r="7" fill="#1e3a5f" stroke="#142a45" stroke-width="2"/><circle cx="210" cy="125" r="12" fill="none" stroke="#1e3a5f" stroke-width="1" opacity="0.2"/><text x="210" y="145" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="800" fill="#142a45">&#x3B8;</text><text x="210" y="155" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="600" fill="#64748b">MAML init</text><defs><marker id="at3" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0,0 6,2.5 0,5" fill="#0d9488"/></marker><marker id="ai3" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0,0 6,2.5 0,5" fill="#1e3a5f"/></marker><marker id="aa3" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0,0 6,2.5 0,5" fill="#d97706"/></marker></defs><path d="M204,120 Q180,100 163,102" fill="none" stroke="#0d9488" stroke-width="2" marker-end="url(#at3)"/><circle cx="158" cy="100" r="4" fill="#0d9488" opacity="0.6"/><text x="168" y="108" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" fill="#0d9488">&#x3B8;'&#x2081;</text><path d="M217,121 Q245,105 268,108" fill="none" stroke="#1e3a5f" stroke-width="2" marker-end="url(#ai3)"/><circle cx="273" cy="110" r="4" fill="#1e3a5f" opacity="0.6"/><text x="262" y="118" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" fill="#1e3a5f">&#x3B8;'&#x2082;</text><path d="M212,132 Q218,155 220,168" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#aa3)"/><circle cx="221" cy="173" r="4" fill="#d97706" opacity="0.6"/><text x="232" y="170" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" fill="#d97706">&#x3B8;'&#x2083;</text><rect x="12" y="225" width="175" height="26" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/><text x="20" y="242" font-family="DM Sans,sans-serif" font-size="7" font-weight="600" fill="#64748b">PARAMETER SPACE</text><line x1="110" y1="238" x2="124" y2="238" stroke="#1e3a5f" stroke-width="2"/><text x="128" y="241" font-family="DM Sans,sans-serif" font-size="6.5" fill="#64748b">inner loop (adapt)</text><rect x="290" y="225" width="118" height="26" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/><text x="298" y="237" font-family="DM Sans,sans-serif" font-size="7" fill="#64748b">&#x3B8; is updated so each</text><text x="298" y="247" font-family="DM Sans,sans-serif" font-size="7" font-weight="600" fill="#142a45">&#x3B8;' adapts in 1 step</text></svg></div>
+            <div style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:12px"><svg viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+              <rect width="440" height="280" rx="10" fill="#f8fafc"/>
+              <defs>
+                <marker id="ma1" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#1e3a5f"/></marker>
+                <marker id="ma2" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#0d9488"/></marker>
+                <marker id="ma3" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#d97706"/></marker>
+              </defs>
+
+              <!-- ===== TRAINING ===== -->
+              <text x="16" y="16" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="700" fill="#94a3b8" letter-spacing="1.5">MAML TRAINING</text>
+              <line x1="16" y1="21" x2="424" y2="21" stroke="#e2e8f0" stroke-width="1"/>
+
+              <!-- T1 box -->
+              <rect x="16" y="28" width="200" height="40" rx="7" fill="#eef3f9" stroke="#b8cfe0" stroke-width="1.5"/>
+              <text x="24" y="43" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#1e3a5f">T&#x2081;: Query q&#x2081; + 2k feedback docs</text>
+              <text x="24" y="56" font-family="DM Sans,sans-serif" font-size="6.5" fill="#64748b">Inner-loop adaptation &middot; BCE loss &middot; bias only</text>
+
+              <!-- T2 box -->
+              <rect x="224" y="28" width="200" height="40" rx="7" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+              <text x="232" y="43" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#0d9488">T&#x2082;: Query q&#x2082; + 2k feedback docs</text>
+              <text x="232" y="56" font-family="DM Sans,sans-serif" font-size="6.5" fill="#64748b">Outer-loop meta-update &middot; tests generalization</text>
+
+              <!-- Labels -->
+              <text x="130" y="82" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="700" fill="#1e3a5f">INNER LOOP (Eq. 2)</text>
+              <text x="330" y="82" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="700" fill="#0d9488">OUTER LOOP (Eq. 3)</text>
+
+              <!-- theta (+20px shift for centering) -->
+              <circle cx="75" cy="105" r="15" fill="#fff" stroke="#1e3a5f" stroke-width="2.5"/>
+              <text x="75" y="110" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="800" fill="#1e3a5f">&#x3B8;</text>
+
+              <!-- Arrow: theta -> theta' -->
+              <path d="M90,105 L190,105" fill="none" stroke="#1e3a5f" stroke-width="2" marker-end="url(#ma1)"/>
+              <rect x="115" y="99" width="55" height="13" rx="3" fill="#eef3f9" stroke="#b8cfe0" stroke-width="0.5"/>
+              <text x="142" y="109" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="700" fill="#1e3a5f">adapt on T&#x2081;</text>
+
+              <!-- theta' -->
+              <circle cx="212" cy="105" r="15" fill="#fff" stroke="#0d9488" stroke-width="2.5"/>
+              <text x="212" y="110" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="800" fill="#0d9488">&#x3B8;'</text>
+
+              <!-- Arrow: theta' -> L -->
+              <path d="M227,105 L320,105" fill="none" stroke="#0d9488" stroke-width="2" marker-end="url(#ma2)"/>
+              <rect x="248" y="99" width="55" height="13" rx="3" fill="#f0fdfa" stroke="#99f6e4" stroke-width="0.5"/>
+              <text x="275" y="109" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="700" fill="#0d9488">eval on T&#x2082;</text>
+
+              <!-- Loss box -->
+              <rect x="325" y="92" width="40" height="26" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1.5"/>
+              <text x="345" y="109" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f">&#x2112;</text>
+
+              <!-- Meta-gradient: L -> theta'' (curved below) -->
+              <path d="M345,118 L345,142 Q345,152 335,152 L85,152 Q75,152 75,142 L75,122" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#ma3)"/>
+              <rect x="165" y="145" width="105" height="13" rx="3" fill="#fffbeb" stroke="#fde68a" stroke-width="0.5"/>
+              <text x="217" y="155" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="700" fill="#d97706">&#x3B8;&#x2033; = &#x3B8; &#x2212; &#x3B1;&#x2207;&#x2112;(g&#x3B8;'; T&#x2082;)</text>
+
+              <!-- Legend (centered) -->
+              <line x1="130" y1="168" x2="142" y2="168" stroke="#1e3a5f" stroke-width="2"/>
+              <text x="146" y="171" font-family="DM Sans,sans-serif" font-size="6" fill="#64748b">inner loop</text>
+              <line x1="200" y1="168" x2="212" y2="168" stroke="#0d9488" stroke-width="2"/>
+              <text x="216" y="171" font-family="DM Sans,sans-serif" font-size="6" fill="#64748b">outer loop</text>
+              <line x1="270" y1="168" x2="282" y2="168" stroke="#d97706" stroke-width="2" stroke-dasharray="4,2"/>
+              <text x="286" y="171" font-family="DM Sans,sans-serif" font-size="6" fill="#64748b">meta-gradient</text>
+
+              <!-- ===== DIVIDER ===== -->
+              <line x1="16" y1="184" x2="424" y2="184" stroke="#e2e8f0" stroke-width="1"/>
+              <text x="16" y="194" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="700" fill="#94a3b8" letter-spacing="1.5">INFERENCE (PER NEW QUERY)</text>
+
+              <!-- theta'' (trained init) -->
+              <circle cx="50" cy="225" r="16" fill="#1e3a5f" stroke="#142a45" stroke-width="2"/>
+              <text x="50" y="230" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="800" fill="#fff">&#x3B8;&#x2033;</text>
+              <text x="50" y="249" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="600" fill="#64748b">trained init</text>
+
+              <!-- Arrow: theta'' -> -->
+              <path d="M66,225 L100,225" fill="none" stroke="#1e3a5f" stroke-width="2" marker-end="url(#ma1)"/>
+
+              <!-- New query box -->
+              <rect x="105" y="209" width="82" height="32" rx="6" fill="#eef3f9" stroke="#b8cfe0" stroke-width="1"/>
+              <text x="146" y="223" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="600" fill="#1e3a5f">New query q</text>
+              <text x="146" y="235" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" fill="#64748b">+ 2k feedback</text>
+
+              <!-- Arrow: query -> theta' -->
+              <path d="M187,225 L225,225" fill="none" stroke="#1e3a5f" stroke-width="2" marker-end="url(#ma1)"/>
+              <text x="206" y="218" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="600" fill="#64748b">1 step</text>
+
+              <!-- theta' adapted -->
+              <circle cx="248" cy="225" r="14" fill="#0d9488" stroke="#0a7a70" stroke-width="2"/>
+              <text x="248" y="229" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="800" fill="#fff">&#x3B8;'</text>
+              <text x="248" y="249" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="600" fill="#0d9488">adapted</text>
+
+              <!-- Arrow: theta' -> re-rank -->
+              <path d="M262,225 L300,225" fill="none" stroke="#0d9488" stroke-width="2" marker-end="url(#ma2)"/>
+
+              <!-- Re-rank -->
+              <rect x="305" y="209" width="110" height="32" rx="6" fill="#1e3a5f"/>
+              <text x="360" y="222" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="#fff">Re-rank</text>
+              <text x="360" y="234" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="#fff">documents</text>
+
+            </svg></div>
             <div style="flex:1;min-width:0">
               <p>Meta-train a Cross-Encoder with MAML so it adapts to any new query in one gradient step using only the feedback docs.</p>
               <div class="eq-block"><span class="eq">&theta;&prime; = &theta; &minus; &alpha; &nabla;<sub>&theta;</sub> &Lscr;(g<sub>&theta;</sub>; T<sub>1</sub>)</span><span class="eq-num">(2)</span></div>
