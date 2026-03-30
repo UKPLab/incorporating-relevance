@@ -4,17 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking</title>
-  <meta name="description" content="EMNLP 2022 - Integrating relevance feedback into neural re-ranking models using few-shot and parameter-efficient learning techniques.">
+  <meta name="description" content="EMNLP 2022 - We explore how relevance feedback can be directly integrated into neural re-ranking models using few-shot and parameter-efficient learning techniques, achieving +5.2 nDCG@20 over baselines.">
+  <meta name="keywords" content="relevance feedback, information retrieval, neural re-ranking, few-shot learning, meta-learning, MAML, kNN, document re-ranking, EMNLP 2022">
+  <meta name="author" content="Tim Baumgartner, Leonardo F. R. Ribeiro, Nils Reimers, Iryna Gurevych">
+  <meta name="theme-color" content="#1e3a5f">
+
+  <meta property="og:type" content="article">
   <meta property="og:title" content="Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking">
-  <meta property="og:description" content="EMNLP 2022 - Integrating relevance feedback into neural re-ranking models using few-shot and parameter-efficient learning techniques.">
+  <meta property="og:description" content="EMNLP 2022 - Integrating relevance feedback into neural re-ranking models using few-shot and parameter-efficient learning. +5.2 nDCG@20 over baselines.">
   <meta property="og:image" content="https://user-images.githubusercontent.com/11020443/214001736-5aa508ac-56cb-4c89-8bf9-ba879693f868.svg">
-  <meta property="og:type" content="website">
+  <meta property="article:published_time" content="2022-12-07T00:00:00.000Z">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Incorporating Relevance Feedback for IR using Few-Shot Re-Ranking">
+  <meta name="twitter:description" content="EMNLP 2022 - kNN and meta-learned Cross-Encoder re-ranking with relevance feedback. +5.2 nDCG@20.">
+
+  <meta name="citation_title" content="Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking">
+  <meta name="citation_author" content="Baumgartner, Tim">
+  <meta name="citation_author" content="Ribeiro, Leonardo F. R.">
+  <meta name="citation_author" content="Reimers, Nils">
+  <meta name="citation_author" content="Gurevych, Iryna">
+  <meta name="citation_publication_date" content="2022/12">
+  <meta name="citation_conference_title" content="Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing">
+  <meta name="citation_pdf_url" content="https://aclanthology.org/2022.emnlp-main.614.pdf">
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "Incorporating Relevance Feedback for Information-Seeking Retrieval using Few-Shot Document Re-Ranking",
+    "author": [
+      {"@type": "Person", "name": "Tim Baumgartner", "url": "https://scholar.google.com/citations?user=pwDGJYsAAAAJ"},
+      {"@type": "Person", "name": "Leonardo F. R. Ribeiro", "url": "https://scholar.google.com/citations?user=92j4_4wAAAAJ"},
+      {"@type": "Person", "name": "Nils Reimers", "url": "https://scholar.google.com/citations?user=57GA3A8AAAAJ"},
+      {"@type": "Person", "name": "Iryna Gurevych", "url": "https://scholar.google.com/citations?user=t3A39e8AAAAJ"}
+    ],
+    "datePublished": "2022-12-07",
+    "publisher": {"@type": "Organization", "name": "Association for Computational Linguistics"},
+    "url": "https://aclanthology.org/2022.emnlp-main.614",
+    "isAccessibleForFree": true
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css">
   <style>
     *, *::before, *::after {
@@ -23,11 +58,78 @@
       box-sizing: border-box;
     }
 
+    /* ==================== NAVBAR ==================== */
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(226,232,240,0.7);
+      padding: 0;
+      transition: box-shadow 0.3s;
+    }
+
+    .topnav.scrolled {
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+
+    .topnav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+    }
+
+    .topnav-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .topnav-links {
+      display: flex;
+      gap: 4px;
+    }
+
+    .topnav-links a {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .topnav-links a:hover {
+      color: var(--accent);
+      background: var(--accent-wash);
+    }
+
+    .topnav-links a.nav-active {
+      background: linear-gradient(135deg, var(--accent), #3b6ea5, var(--teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @media (max-width: 600px) {
+      .topnav-title { display: none; }
+      .topnav-links a { padding: 6px 8px; font-size: 0.72rem; }
+    }
+
     :root {
-      --accent: #4f46e5;
-      --accent-light: #818cf8;
-      --accent-wash: #eef2ff;
-      --accent-dark: #3730a3;
+      --accent: #1e3a5f;
+      --accent-light: #3b6ea5;
+      --accent-wash: #eef3f9;
+      --accent-dark: #142a45;
       --teal: #0d9488;
       --teal-wash: #f0fdfa;
       --amber: #d97706;
@@ -42,7 +144,7 @@
       --shadow-lg: 0 10px 40px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 64px; }
 
     body {
       font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -62,7 +164,7 @@
     /* ==================== HERO ==================== */
     .hero {
       position: relative;
-      padding: 100px 0 48px;
+      padding: 64px 0 48px;
       text-align: center;
       overflow: hidden;
     }
@@ -72,8 +174,8 @@
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(79,70,229,0.08), transparent),
-        radial-gradient(ellipse 60% 50% at 80% 50%, rgba(13,148,136,0.06), transparent),
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(30,58,95,0.08), transparent),
+        radial-gradient(ellipse 60% 50% at 80% 50%, rgba(51,111,162,0.06), transparent),
         radial-gradient(ellipse 50% 40% at 10% 60%, rgba(217,119,6,0.04), transparent);
       pointer-events: none;
     }
@@ -83,25 +185,74 @@
     .venue-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: var(--accent);
+      gap: 10px;
+      background: linear-gradient(135deg, var(--accent), #3b6ea5);
       color: #fff;
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 7px 20px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 12px 32px;
       border-radius: 100px;
       margin-bottom: 28px;
-      letter-spacing: 0.8px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      box-shadow: 0 2px 12px rgba(79,70,229,0.3);
+      box-shadow: 0 4px 20px rgba(30,58,95,0.35);
     }
 
     .venue-badge::before {
       content: '';
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: rgba(255,255,255,0.7);
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 620px;
+      margin: -16px auto 20px;
+      line-height: 1.6;
+    }
+
+    .hero-metric {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 24px;
+      margin-top: 8px;
+    }
+
+    .hero-metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .hero-metric-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-align: left;
+      line-height: 1.3;
+    }
+
+    .link-btn-primary {
+      background: var(--accent) !important;
+      color: #fff !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 2px 12px rgba(30,58,95,0.25);
+    }
+
+    .link-btn-primary i { opacity: 1 !important; }
+
+    .link-btn-primary:hover {
+      background: var(--accent-dark) !important;
+      border-color: var(--accent-dark) !important;
+      color: #fff !important;
+      box-shadow: 0 4px 20px rgba(30,58,95,0.35) !important;
     }
 
     .paper-title {
@@ -118,7 +269,7 @@
     }
 
     .title-gradient {
-      background: linear-gradient(135deg, var(--accent), #7c3aed, var(--teal));
+      background: linear-gradient(135deg, var(--accent), #3b6ea5, var(--teal));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -202,7 +353,7 @@
       border-color: var(--accent);
       color: var(--accent);
       transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(79,70,229,0.15);
+      box-shadow: 0 4px 16px rgba(30,58,95,0.15);
     }
 
     .link-btn i {
@@ -256,16 +407,43 @@
     }
 
     /* ==================== ABSTRACT ==================== */
-    .abstract-text {
+    .abstract-tldr {
       max-width: 780px;
       line-height: 1.85;
       color: #475569;
-      font-size: 1.05rem;
+      font-size: 1.08rem;
+      margin-bottom: 16px;
     }
 
-    .abstract-text::first-line {
-      color: var(--text);
-      font-weight: 500;
+    .abstract-full {
+      max-width: 780px;
+      line-height: 1.85;
+      color: #475569;
+      font-size: 0.95rem;
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .abstract-full.show { display: block; }
+
+    .abstract-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .abstract-toggle:hover {
+      background: var(--accent-wash);
+      border-color: var(--accent);
     }
 
     /* ==================== METHOD DIAGRAM ==================== */
@@ -313,8 +491,8 @@
     }
 
     .phase-header {
-      padding: 12px 20px;
-      font-size: 0.72rem;
+      padding: 14px 22px;
+      font-size: 0.85rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -337,7 +515,7 @@
       flex-shrink: 0;
     }
 
-    .phase-1 .phase-header { background: linear-gradient(135deg, var(--accent), #6366f1); }
+    .phase-1 .phase-header { background: linear-gradient(135deg, var(--accent), #3b6ea5); }
     .phase-2 .phase-header { background: linear-gradient(135deg, var(--teal), #14b8a6); }
     .phase-3 .phase-header { background: linear-gradient(135deg, #334155, var(--text)); }
 
@@ -358,11 +536,19 @@
       flex-wrap: wrap;
     }
 
+    .diagram-intro {
+      font-size: 0.95rem;
+      color: #475569;
+      max-width: 780px;
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+
     /* Nodes */
     .n {
-      padding: 9px 16px;
+      padding: 11px 20px;
       border-radius: 9px;
-      font-size: 0.8rem;
+      font-size: 1rem;
       font-weight: 600;
       white-space: nowrap;
       text-align: center;
@@ -377,7 +563,7 @@
     .n-data {
       background: var(--accent-wash);
       color: var(--accent-dark);
-      border: 1px solid #c7d2fe;
+      border: 1px solid #b8cfe0;
     }
 
     .n-proc {
@@ -407,7 +593,7 @@
     /* Arrow */
     .arr {
       color: #94a3b8;
-      font-size: 0.72rem;
+      font-size: 0.85rem;
       flex-shrink: 0;
       display: flex;
       align-items: center;
@@ -418,7 +604,7 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+      background: linear-gradient(135deg, #e0e7ff, #b8cfe0);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -426,7 +612,7 @@
       font-size: 0.85rem;
       flex-shrink: 0;
       border: 2px solid #fff;
-      box-shadow: 0 2px 8px rgba(79,70,229,0.15);
+      box-shadow: 0 2px 8px rgba(30,58,95,0.15);
     }
 
     /* Feedback badges */
@@ -459,7 +645,7 @@
     }
 
     .track-label {
-      font-size: 0.68rem;
+      font-size: 0.82rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -679,7 +865,7 @@
       white-space: nowrap;
     }
 
-    .knn-tag.kt-query { background: var(--accent-wash); color: var(--accent-dark); border: 1px solid #c7d2fe; }
+    .knn-tag.kt-query { background: var(--accent-wash); color: var(--accent-dark); border: 1px solid #b8cfe0; }
     .knn-tag.kt-doc   { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
     .knn-tag.kt-fb    { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
     .knn-tag.kt-op    { background: none; color: var(--text-secondary); font-size: 0.8rem; padding: 0 2px; }
@@ -761,7 +947,7 @@
 
     .ms-warn { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
     .ms-proc { background: var(--text); color: #fff; }
-    .ms-data { background: var(--accent-wash); color: var(--accent-dark); border: 1px solid #c7d2fe; }
+    .ms-data { background: var(--accent-wash); color: var(--accent-dark); border: 1px solid #b8cfe0; }
     .ms-out  { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
 
     .maml-arr {
@@ -812,6 +998,87 @@
 
     .prop-icon.green { color: #16a34a; }
     .prop-icon.blue  { color: var(--accent); }
+
+    /* Vertical methods layout */
+    .methods-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .methods-vertical .method-card-body {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .methods-vertical .mc-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .methods-vertical .mc-visual {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media (max-width: 768px) {
+      .methods-vertical .method-card-body {
+        flex-direction: column;
+      }
+    }
+
+    /* Method pills in results table */
+    .method-pills {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .mpill {
+      font-size: 0.58rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+
+    .mpill-bm25 { background: #dbeafe; color: #1e40af; }
+    .mpill-knn  { background: #f0fdfa; color: #0d9488; border: 1px solid #99f6e4; }
+    .mpill-ce   { background: var(--accent-wash); color: var(--accent-dark); }
+    .mpill-maml { background: #fef3c7; color: #92400e; }
+    .mpill-rf   { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
+
+    .method-details {
+      margin-top: 12px;
+    }
+
+    .method-details summary {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 6px 0;
+      list-style: none;
+    }
+
+    .method-details summary::-webkit-details-marker { display: none; }
+
+    .method-details summary::before {
+      content: '\f078';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      font-size: 0.6rem;
+      margin-right: 6px;
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+
+    .method-details[open] summary::before {
+      transform: rotate(180deg);
+    }
 
     @media (max-width: 768px) {
       .methods-grid {
@@ -968,10 +1235,10 @@
       background: var(--text);
       color: #fff;
       font-weight: 600;
-      padding: 14px 18px;
+      padding: 12px 10px;
       text-align: left;
       white-space: nowrap;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -981,7 +1248,7 @@
     }
 
     tbody td {
-      padding: 12px 18px;
+      padding: 10px 10px;
       border-bottom: 1px solid var(--border);
     }
 
@@ -1004,6 +1271,7 @@
       font-weight: 600;
       white-space: nowrap;
       color: var(--text);
+      min-width: 160px;
     }
 
     .best-row {
@@ -1014,8 +1282,8 @@
       color: var(--teal);
     }
 
-    .best-row td {
-      font-weight: 600 !important;
+    .best-row td strong {
+      font-weight: 800;
     }
 
     .table-note {
@@ -1028,11 +1296,11 @@
       display: flex;
       align-items: center;
       gap: 20px;
-      background: linear-gradient(135deg, var(--accent-wash), #f5f3ff);
-      border-radius: var(--radius);
+      background: #fffbeb;
+      border-left: 4px solid var(--amber);
+      border-radius: 0 var(--radius) var(--radius) 0;
       padding: 24px 28px;
-      margin-top: 28px;
-      border: 1px solid #c7d2fe;
+      margin: 24px 0;
     }
 
     .highlight-number {
@@ -1040,13 +1308,13 @@
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: var(--accent);
+      background: var(--amber);
       color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 16px rgba(79,70,229,0.3);
+      box-shadow: 0 4px 16px rgba(217,119,6,0.3);
     }
 
     .highlight-number .big {
@@ -1199,6 +1467,115 @@
     .stagger-3 { transition-delay: 0.3s; }
     .stagger-4 { transition-delay: 0.35s; }
 
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      html { scroll-behavior: auto; }
+      .fade-up { opacity: 1; transform: none; }
+    }
+
+    /* ==================== SCROLL TO TOP ==================== */
+    .scroll-top {
+      position: fixed; bottom: 28px; right: 28px; z-index: 50;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 4px 16px rgba(30,58,95,0.3);
+      opacity: 0; transform: translateY(10px); transition: all 0.3s;
+      font-size: 0.85rem;
+    }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-dark); transform: translateY(-2px); }
+
+    /* ==================== BIBTEX TERMINAL HEADER ==================== */
+    .bibtex-header {
+      background: #2a2a3e; padding: 10px 20px; display: flex; align-items: center; gap: 8px;
+    }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot.red { background: #ff5f56; }
+    .code-dot.yellow { background: #ffbd2e; }
+    .code-dot.green { background: #27c93f; }
+
+    /* ==================== SLIDE MODE ==================== */
+    .slide-toggle-btn {
+      background: none; border: 1px solid var(--border); border-radius: 8px;
+      padding: 5px 10px; cursor: pointer; color: var(--text-secondary);
+      font-size: 0.78rem; transition: all 0.2s; display: flex; align-items: center;
+      margin-left: 8px; gap: 5px; font-family: 'DM Sans', sans-serif; font-weight: 600;
+    }
+    .slide-toggle-btn:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-wash); }
+    .slide-controls {
+      display: none; position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      z-index: 200; background: rgba(26,26,46,0.92); backdrop-filter: blur(12px);
+      border-radius: 100px; padding: 8px 20px; gap: 16px; align-items: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .slide-progress { display: flex; align-items: center; gap: 3px; }
+    .slide-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2);
+      cursor: pointer; transition: all 0.25s; position: relative;
+    }
+    .slide-dot:hover { background: rgba(255,255,255,0.5); transform: scale(1.3); }
+    .slide-dot.dot-active { background: #fff; width: 24px; border-radius: 4px; }
+    .slide-dot-tip {
+      display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+      background: var(--text); color: #fff; font-size: 0.6rem; font-weight: 600;
+      padding: 3px 8px; border-radius: 5px; white-space: nowrap; margin-bottom: 8px;
+      font-family: 'DM Sans', sans-serif; pointer-events: none;
+    }
+    .slide-dot:hover .slide-dot-tip { display: block; }
+    .slide-nav-btn {
+      background: none; border: none; color: #94a3b8; cursor: pointer;
+      font-size: 1rem; padding: 6px 10px; border-radius: 8px; transition: all 0.2s;
+    }
+    .slide-nav-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .slide-exit-btn { margin-left: 4px; border-left: 1px solid rgba(255,255,255,0.15); padding-left: 14px; }
+
+    body.slide-mode { overflow: hidden; }
+    body.slide-mode .topnav {
+      background: rgba(26,26,46,0.95); backdrop-filter: blur(16px);
+      border-bottom-color: rgba(255,255,255,0.1);
+    }
+    body.slide-mode .topnav-title { color: #e2e8f0; }
+    body.slide-mode .topnav-inner { justify-content: flex-start; gap: 16px; }
+    body.slide-mode .topnav-links { display: none; }
+    body.slide-mode .slide-toggle-btn { color: #e2e8f0; border-color: rgba(255,255,255,0.2); margin-left: auto; }
+    body.slide-mode .slide-toggle-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    body.slide-mode .slide-controls { display: flex; }
+    body.slide-mode .scroll-top { display: none !important; }
+    body.slide-mode footer { display: none; }
+
+    body.slide-mode .section,
+    body.slide-mode .section-alt,
+    body.slide-mode section.hero,
+    body.slide-mode section.links {
+      position: fixed; top: 48px; left: 0; right: 0;
+      height: calc(100vh - 48px); overflow-y: auto;
+      display: flex; align-items: flex-start; justify-content: center;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      transform: translateX(30px); z-index: 50; padding: 48px 0 80px;
+      background: var(--bg); border: none;
+    }
+    body.slide-mode section.hero { text-align: center; padding-top: 0; padding-bottom: 0; align-items: center; }
+    body.slide-mode section.hero::before { display: none; }
+    body.slide-mode section.hero .container { position: static; }
+    body.slide-mode section.links { height: auto; padding: 0; background: transparent; top: auto; bottom: 18vh; }
+    body.slide-mode .section .container,
+    body.slide-mode .section-alt .container { max-width: 1100px; }
+    body.slide-mode section.slide-active { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(0); }
+    body.slide-mode section.slide-exit-left { opacity: 0; transform: translateX(-30px); }
+    body.slide-mode section.slide-exit-right { opacity: 0; transform: translateX(30px); }
+    body.slide-mode .fade-up { opacity: 1 !important; transform: none !important; }
+    body.slide-mode .section, body.slide-mode .section-alt { padding: 32px 0 70px; }
+    body.slide-mode .section h2, body.slide-mode .section-alt h2 { margin-bottom: 14px; font-size: 1.7rem; }
+
+    @media (max-width: 768px) {
+      body.slide-mode section.hero, body.slide-mode .section, body.slide-mode .section-alt {
+        align-items: flex-start; padding: 20px 0;
+      }
+      .slide-controls { bottom: 16px; padding: 6px 14px; gap: 10px; }
+    }
+
     /* ==================== RESPONSIVE ==================== */
     @media (max-width: 768px) {
       .paper-title {
@@ -1268,11 +1645,30 @@
 </head>
 <body>
 
+  <!-- Sticky Navbar -->
+  <nav class="topnav" id="topnav">
+    <div class="topnav-inner">
+      <div class="topnav-title">Incorporating Relevance Feedback</div>
+      <div class="topnav-links">
+        <a href="#abstract">Abstract</a>
+        <a href="#overview">Overview</a>
+        <a href="#methods">Methods</a>
+        <a href="#contributions">Contributions</a>
+        <a href="#datasets">Datasets</a>
+        <a href="#results">Results</a>
+        <a href="#citation">Citation</a>
+      </div>
+      <button class="slide-toggle-btn" id="slideToggle" onclick="toggleSlideMode()">
+        <i class="fa-solid fa-display"></i> <span class="slide-toggle-label">Slides</span>
+      </button>
+    </div>
+  </nav>
+
   <!-- Hero -->
   <section class="hero">
     <div class="container">
-      <div class="venue-badge">EMNLP 2022</div>
       <h1 class="paper-title"><span class="title-gradient">Incorporating Relevance Feedback</span> for Information-Seeking Retrieval using Few-Shot Document Re-Ranking</h1>
+      <p class="hero-subtitle">Re-ranking search results using a handful of user-selected relevant documents, via few-shot learning and meta-learning.</p>
       <div class="authors">
         <span class="author-name"><a href="https://scholar.google.com/citations?user=pwDGJYsAAAAJ" target="_blank" rel="noopener">Tim Baumg&auml;rtner</a><sup>1</sup></span>,
         <span class="author-name"><a href="https://scholar.google.com/citations?user=92j4_4wAAAAJ" target="_blank" rel="noopener">Leonardo F. R. Ribeiro</a><sup>1</sup></span>,
@@ -1290,7 +1686,7 @@
   <section class="links">
     <div class="container">
       <div class="links-row">
-        <a href="https://aclanthology.org/2022.emnlp-main.614" class="link-btn" target="_blank" rel="noopener">
+        <a href="https://aclanthology.org/2022.emnlp-main.614" class="link-btn link-btn-primary" target="_blank" rel="noopener">
           <i class="fa-solid fa-file-pdf"></i> Paper
         </a>
         <a href="https://arxiv.org/abs/2210.10695" class="link-btn" target="_blank" rel="noopener">
@@ -1314,11 +1710,17 @@
     <div class="container">
       <div class="fade-up">
         <div class="section-label">Abstract</div>
-        <h2>TL;DR</h2>
+        <h2><span class="title-gradient">TL;DR</span></h2>
       </div>
-      <p class="abstract-text fade-up stagger-1">
-        Pairing a lexical retriever with a neural re-ranking model has set state-of-the-art performance on large-scale information retrieval datasets. This pipeline covers scenarios like question answering or navigational queries, however, for information-seeking scenarios, users often provide information on whether a document is relevant to their query in form of clicks or explicit feedback. Therefore, in this work, we explore how relevance feedback can be directly integrated into neural re-ranking models by adopting few-shot and parameter-efficient learning techniques. Specifically, we introduce a kNN approach that re-ranks documents based on their similarity with the query and the documents the user considers relevant. Further, we explore Cross-Encoder models that we pre-train using meta-learning and subsequently fine-tune for each query, training only on the feedback documents. To evaluate our different integration strategies, we transform four existing information retrieval datasets into the relevance feedback scenario. Extensive experiments demonstrate that integrating relevance feedback directly in neural re-ranking models improves their performance, and fusing lexical ranking with our best performing neural re-ranker outperforms all other methods by 5.2 nDCG@20.
+      <p class="abstract-tldr fade-up stagger-1">
+        Neural re-ranking models ignore <strong>relevance feedback</strong> that users naturally provide through clicks and explicit judgments. We integrate this feedback directly into re-rankers using <strong>kNN similarity</strong>, <strong>per-query fine-tuning</strong>, and <strong>MAML meta-learning</strong>&mdash;requiring only a handful of labeled documents. Fusing our best neural re-ranker with lexical retrieval outperforms all baselines by <strong>5.2&nbsp;nDCG@20</strong> across four IR benchmarks.
       </p>
+      <button class="abstract-toggle fade-up stagger-1" id="abstract-toggle" onclick="toggleAbstract()">
+        <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;margin-right:4px"></i> Full abstract
+      </button>
+      <div class="abstract-full" id="abstract-full">
+        Pairing a lexical retriever with a neural re-ranking model has set state-of-the-art performance on large-scale information retrieval datasets. This pipeline covers scenarios like question answering or navigational queries, however, for information-seeking scenarios, users often provide information on whether a document is relevant to their query in form of clicks or explicit feedback. Therefore, in this work, we explore how relevance feedback can be directly integrated into neural re-ranking models by adopting few-shot and parameter-efficient learning techniques. Specifically, we introduce a kNN approach that re-ranks documents based on their similarity with the query and the documents the user considers relevant. Further, we explore Cross-Encoder models that we pre-train using meta-learning and subsequently fine-tune for each query, training only on the feedback documents. To evaluate our different integration strategies, we transform four existing information retrieval datasets into the relevance feedback scenario. Extensive experiments demonstrate that integrating relevance feedback directly in neural re-ranking models improves their performance, and fusing lexical ranking with our best performing neural re-ranker outperforms all other methods by 5.2 nDCG@20.
+      </div>
     </div>
   </section>
 
@@ -1327,8 +1729,10 @@
     <div class="container">
       <div class="fade-up">
         <div class="section-label">Approach</div>
-        <h2>Method Overview</h2>
+        <h2>Method <span class="title-gradient">Overview</span></h2>
       </div>
+
+      <p class="diagram-intro fade-up stagger-1">Our pipeline has three stages: retrieve an initial set of documents and collect user feedback, then use that feedback for both query expansion and re-ranker fine-tuning, and finally fuse the lexical and neural rankings.</p>
 
       <div class="method-diagram fade-up stagger-1">
 
@@ -1406,20 +1810,16 @@
             Re-Ranking &amp; Fusion
           </div>
           <div class="phase-body">
-            <div class="pipeline">
-              <div class="n n-teal">BM25-QE</div>
+            <div class="pipeline" style="flex-wrap:nowrap">
+              <div class="n n-teal" style="padding:9px 12px;font-size:0.85rem">BM25-QE</div>
               <div class="arr"><i class="fa-solid fa-right-long"></i></div>
-              <div class="merge-box">
-                <div class="merge-inputs">
-                  <div class="merge-circle">+</div>
-                </div>
-              </div>
+              <div class="merge-circle" style="width:28px;height:28px;font-size:0.8rem">+</div>
               <div class="arr"><i class="fa-solid fa-left-long"></i></div>
-              <div class="n n-data">Re-Ranker <small>(CE / kNN)</small></div>
-              <div class="arr" style="margin:0 4px"><i class="fa-solid fa-angles-right"></i></div>
-              <div class="n n-proc">Reciprocal Rank Fusion</div>
+              <div class="n n-data" style="padding:9px 12px;font-size:0.85rem">CE / kNN</div>
               <div class="arr"><i class="fa-solid fa-arrow-right"></i></div>
-              <div class="n n-result"><i class="fa-solid fa-trophy" style="margin-right:6px;font-size:0.75rem"></i>Final Ranking</div>
+              <div class="n n-proc" style="padding:9px 12px;font-size:0.85rem">RRF</div>
+              <div class="arr"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="n n-result" style="padding:9px 14px;font-size:0.85rem"><i class="fa-solid fa-trophy" style="margin-right:5px;font-size:0.7rem"></i>Final</div>
             </div>
           </div>
         </div>
@@ -1433,260 +1833,40 @@
     <div class="container">
       <div class="fade-up">
         <div class="section-label">Re-Ranking Methods</div>
-        <h2>How We Integrate Feedback</h2>
+        <h2>How We Integrate <span class="title-gradient">Feedback</span></h2>
       </div>
-
-      <div class="methods-grid">
-
-        <!-- kNN Card -->
-        <div class="method-card fade-up stagger-1">
+      <div class="methods-vertical fade-up stagger-1">
+        <!-- kNN -->
+        <div class="method-card">
           <div class="method-card-header">
             <div class="mc-icon mc-teal"><i class="fa-solid fa-circle-nodes"></i></div>
             <h3>kNN Re-Ranking <small>Similarity-based, no training</small></h3>
           </div>
-
-          <!-- kNN Embedding Space SVG -->
-          <div style="padding:0 20px;margin-bottom:4px">
-            <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
-              <!-- Background -->
-              <rect width="420" height="260" rx="10" fill="#f8fafc"/>
-              <!-- Subtle grid dots -->
-              <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="10" cy="10" r="0.7" fill="#cbd5e1"/>
-              </pattern>
-              <rect width="420" height="260" rx="10" fill="url(#dots)"/>
-
-              <!-- Candidate docs (gray, scattered) -->
-              <circle cx="90" cy="200" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-              <circle cx="340" cy="200" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-              <circle cx="370" cy="120" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-              <circle cx="50" cy="100" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-              <circle cx="160" cy="210" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-              <circle cx="310" cy="55" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-
-              <!-- High-score candidate d1 (highlighted) -->
-              <circle cx="215" cy="105" r="14" fill="#f0fdfa" stroke="#0d9488" stroke-width="2" stroke-dasharray="0"/>
-              <!-- Glow -->
-              <circle cx="215" cy="105" r="22" fill="none" stroke="#0d9488" stroke-width="1" opacity="0.15"/>
-              <circle cx="215" cy="105" r="30" fill="none" stroke="#0d9488" stroke-width="0.5" opacity="0.08"/>
-              <text x="215" y="109" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#0f766e">d&#x2081;</text>
-
-              <!-- Low-score candidate d2 -->
-              <circle cx="85" cy="155" r="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
-              <text x="85" y="159" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="600" fill="#94a3b8">d&#x2082;</text>
-
-              <!-- Query point (indigo star) -->
-              <polygon points="120,70 124,80 135,80 127,87 130,98 120,92 110,98 113,87 105,80 116,80" fill="#4f46e5" stroke="#3730a3" stroke-width="1"/>
-              <text x="120" y="115" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#4f46e5">Query q</text>
-
-              <!-- Feedback docs R+ (green cluster) -->
-              <circle cx="280" cy="80" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-              <circle cx="300" cy="110" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-              <circle cx="265" cy="115" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-              <text x="282" y="145" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#16a34a">Feedback R&#x207A;</text>
-
-              <!-- Similarity lines to d1 (good - short dashes, strong) -->
-              <line x1="130" y1="75" x2="202" y2="100" stroke="#4f46e5" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
-              <line x1="270" y1="82" x2="228" y2="100" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
-              <line x1="290" y1="108" x2="228" y2="105" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4"/>
-              <line x1="258" y1="112" x2="225" y2="107" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4"/>
-
-              <!-- Similarity lines to d2 (bad - long dashes, weak) -->
-              <line x1="118" y1="85" x2="88" y2="145" stroke="#4f46e5" stroke-width="1" stroke-dasharray="6,4" opacity="0.2"/>
-              <line x1="265" y1="118" x2="95" y2="152" stroke="#16a34a" stroke-width="1" stroke-dasharray="6,4" opacity="0.12"/>
-
-              <!-- Score labels -->
-              <rect x="186" y="55" width="60" height="20" rx="10" fill="#0d9488"/>
-              <text x="216" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#fff">High score</text>
-
-              <rect x="62" y="175" width="48" height="18" rx="9" fill="#94a3b8" opacity="0.6"/>
-              <text x="86" y="187" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="600" fill="#fff">Low score</text>
-
-              <!-- Legend -->
-              <rect x="12" y="225" width="120" height="26" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
-              <text x="20" y="242" font-family="DM Sans,sans-serif" font-size="7" font-weight="600" fill="#64748b">EMBEDDING SPACE</text>
-              <line x1="88" y1="237" x2="102" y2="237" stroke="#4f46e5" stroke-width="1.5" stroke-dasharray="3,2"/>
-              <text x="106" y="241" font-family="DM Sans,sans-serif" font-size="6.5" fill="#64748b">sim</text>
-            </svg>
-          </div>
-
-          <div class="method-card-body">
-            <p>
-              A dense retrieval model (MiniLM, 6 layers) encodes queries, feedback documents, and candidates into a shared embedding space. Each candidate document is scored by its cosine similarity to both the query and the relevant feedback documents:
-            </p>
-
-            <div class="eq-block">
-              <span class="eq">s<sub>i</sub> = f(d<sub>i</sub>, q) + &sum;<sub>d<sub>j</sub>&thinsp;&isin;&thinsp;R<sup>+</sup></sub> f(d<sub>i</sub>, d<sub>j</sub>)</span>
-              <span class="eq-num">(1)</span>
+          <div class="method-card-body" style="display:flex;gap:24px;align-items:stretch">
+            <div style="flex:1;min-width:0;display:flex;align-items:center;background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:8px"><svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block"><rect width="420" height="260" rx="10" fill="#f8fafc"/><pattern id="d5" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="0.7" fill="#cbd5e1"/></pattern><rect width="420" height="260" rx="10" fill="url(#d5)"/><circle cx="90" cy="200" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="340" cy="200" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="370" cy="120" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="50" cy="100" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="160" cy="210" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="310" cy="55" r="7" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/><circle cx="215" cy="105" r="14" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/><circle cx="215" cy="105" r="22" fill="none" stroke="#0d9488" stroke-width="1" opacity="0.15"/><circle cx="215" cy="105" r="30" fill="none" stroke="#0d9488" stroke-width="0.5" opacity="0.08"/><text x="215" y="109" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#0f766e">d&#x2081;</text><circle cx="85" cy="155" r="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/><text x="85" y="159" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="600" fill="#94a3b8">d&#x2082;</text><polygon points="120,70 124,80 135,80 127,87 130,98 120,92 110,98 113,87 105,80 116,80" fill="#1e3a5f" stroke="#142a45" stroke-width="1"/><text x="120" y="115" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#1e3a5f">Query q</text><circle cx="280" cy="80" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><circle cx="300" cy="110" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><circle cx="265" cy="115" r="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><text x="282" y="145" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#16a34a">Feedback R&#x207A;</text><line x1="130" y1="75" x2="202" y2="100" stroke="#1e3a5f" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/><line x1="270" y1="82" x2="228" y2="100" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/><line x1="290" y1="108" x2="228" y2="105" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4"/><line x1="258" y1="112" x2="225" y2="107" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4"/><line x1="118" y1="85" x2="88" y2="145" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="6,4" opacity="0.2"/><line x1="265" y1="118" x2="95" y2="152" stroke="#16a34a" stroke-width="1" stroke-dasharray="6,4" opacity="0.12"/><rect x="186" y="55" width="60" height="20" rx="10" fill="#0d9488"/><text x="216" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#fff">High score</text><rect x="62" y="175" width="48" height="18" rx="9" fill="#94a3b8" opacity="0.6"/><text x="86" y="187" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="600" fill="#fff">Low score</text></svg></div>
+            <div style="flex:1;min-width:0">
+              <p>Score each candidate by cosine similarity to the query and relevant feedback documents. No training needed&mdash;uses precomputed MiniLM embeddings.</p>
+              <div class="eq-block"><span class="eq">s<sub>i</sub> = f(d<sub>i</sub>, q) + &sum;<sub>d<sub>j</sub>&thinsp;&isin;&thinsp;R<sup>+</sup></sub> f(d<sub>i</sub>, d<sub>j</sub>)</span><span class="eq-num">(1)</span></div>
+              <details class="method-details" open><summary>Key properties</summary><ul class="key-props"><li><i class="fa-solid fa-circle prop-icon green"></i> <span>Zero weight updates&mdash;extremely fast at inference</span></li><li><i class="fa-solid fa-circle prop-icon green"></i> <span>Scores against <em>k</em>+1 individual points (like Prototypical Networks)</span></li><li><i class="fa-solid fa-circle prop-icon green"></i> <span>+2.6 nDCG@20 when fused with BM25-QE</span></li></ul></details>
             </div>
-
-            <div class="knn-diagram">
-              <div class="knn-inputs">
-                <div class="knn-row">
-                  <div class="knn-tag kt-query">Query <em>q</em></div>
-                  <div class="knn-marr"><i class="fa-solid fa-xmark"></i></div>
-                  <div class="knn-tag kt-doc">Doc <em>d<sub>i</sub></em></div>
-                  <div class="knn-marr"><i class="fa-solid fa-arrow-right"></i></div>
-                  <div class="knn-fn">cosine sim</div>
-                  <div class="knn-marr"><i class="fa-solid fa-arrow-right"></i></div>
-                  <div class="knn-tag kt-op"><em>f</em>(<em>d<sub>i</sub></em>, <em>q</em>)</div>
-                </div>
-                <div class="knn-row">
-                  <div class="knn-tag kt-fb">Feedback <em>R</em><sup>+</sup></div>
-                  <div class="knn-marr"><i class="fa-solid fa-xmark"></i></div>
-                  <div class="knn-tag kt-doc">Doc <em>d<sub>i</sub></em></div>
-                  <div class="knn-marr"><i class="fa-solid fa-arrow-right"></i></div>
-                  <div class="knn-fn">cosine sim</div>
-                  <div class="knn-marr"><i class="fa-solid fa-arrow-right"></i></div>
-                  <div class="knn-tag kt-op">&sum; <em>f</em>(<em>d<sub>i</sub></em>, <em>d<sub>j</sub></em>)</div>
-                </div>
-              </div>
-              <div class="knn-brace">
-                <div class="knn-equals">=</div>
-                <div class="knn-result">Score <em>s<sub>i</sub></em></div>
-              </div>
-            </div>
-
-            <ul class="key-props">
-              <li><i class="fa-solid fa-circle prop-icon green"></i> <span>No model weight updates &mdash; uses precomputed embeddings, extremely fast at inference</span></li>
-              <li><i class="fa-solid fa-circle prop-icon green"></i> <span>Resembles Prototypical Networks, but scores against <em>k</em>+1 individual points rather than an averaged class prototype</span></li>
-              <li><i class="fa-solid fa-circle prop-icon green"></i> <span>Can be combined with BM25-QE via rank fusion for +2.6 nDCG@20 with near-zero added latency</span></li>
-            </ul>
           </div>
         </div>
-
-        <!-- MAML Card -->
-        <div class="method-card fade-up stagger-2">
+        <!-- MAML -->
+        <div class="method-card">
           <div class="method-card-header">
             <div class="mc-icon mc-purple"><i class="fa-solid fa-brain"></i></div>
             <h3>CE MAML + Query FT <small>Meta-learned Cross-Encoder</small></h3>
           </div>
-
-          <!-- MAML Training SVG -->
-          <div style="padding:0 20px;margin-bottom:4px">
-            <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
-              <!-- Background -->
-              <rect width="420" height="260" rx="10" fill="#f8fafc"/>
-              <pattern id="dots2" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="10" cy="10" r="0.7" fill="#cbd5e1"/>
-              </pattern>
-              <rect width="420" height="260" rx="10" fill="url(#dots2)"/>
-
-              <!-- Loss landscape contours (centered ~210,130) -->
-              <ellipse cx="210" cy="130" rx="180" ry="110" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-              <ellipse cx="210" cy="130" rx="145" ry="88" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-              <ellipse cx="210" cy="130" rx="110" ry="66" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-              <ellipse cx="210" cy="130" rx="75" ry="44" fill="none" stroke="#cbd5e1" stroke-width="1"/>
-              <ellipse cx="210" cy="130" rx="40" ry="22" fill="none" stroke="#94a3b8" stroke-width="1"/>
-
-              <!-- Task 1 optimum region -->
-              <circle cx="155" cy="95" r="18" fill="#0d9488" opacity="0.06" stroke="#0d9488" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
-              <text x="155" y="75" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#0d9488">Task T&#x2081;</text>
-              <text x="155" y="84" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" fill="#0d9488" opacity="0.7">optimal</text>
-
-              <!-- Task 2 optimum region -->
-              <circle cx="275" cy="105" r="18" fill="#4f46e5" opacity="0.06" stroke="#4f46e5" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
-              <text x="275" y="85" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#4f46e5">Task T&#x2082;</text>
-              <text x="275" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" fill="#4f46e5" opacity="0.7">optimal</text>
-
-              <!-- Task 3 optimum region -->
-              <circle cx="220" cy="175" r="18" fill="#d97706" opacity="0.06" stroke="#d97706" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
-              <text x="220" y="199" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#d97706">Task T&#x2083;</text>
-              <text x="220" y="208" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" fill="#d97706" opacity="0.7">optimal</text>
-
-              <!-- theta point (MAML initialization) -->
-              <circle cx="210" cy="125" r="7" fill="#4f46e5" stroke="#3730a3" stroke-width="2"/>
-              <circle cx="210" cy="125" r="12" fill="none" stroke="#4f46e5" stroke-width="1" opacity="0.2"/>
-              <text x="210" y="145" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="800" fill="#3730a3">&#x3B8;</text>
-              <text x="210" y="155" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="600" fill="#64748b">MAML init</text>
-
-              <!-- Inner loop arrows (theta -> theta' for each task) -->
-              <!-- Arrow markers -->
-              <defs>
-                <marker id="ar-teal" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
-                  <polygon points="0,0 6,2.5 0,5" fill="#0d9488"/>
-                </marker>
-                <marker id="ar-indigo" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
-                  <polygon points="0,0 6,2.5 0,5" fill="#4f46e5"/>
-                </marker>
-                <marker id="ar-amber" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
-                  <polygon points="0,0 6,2.5 0,5" fill="#d97706"/>
-                </marker>
-              </defs>
-
-              <!-- Inner loop: theta -> T1 adapted -->
-              <path d="M204,120 Q180,100 163,102" fill="none" stroke="#0d9488" stroke-width="2" marker-end="url(#ar-teal)"/>
-              <circle cx="158" cy="100" r="4" fill="#0d9488" opacity="0.6"/>
-              <text x="168" y="108" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" fill="#0d9488">&#x3B8;'&#x2081;</text>
-
-              <!-- Inner loop: theta -> T2 adapted -->
-              <path d="M217,121 Q245,105 268,108" fill="none" stroke="#4f46e5" stroke-width="2" marker-end="url(#ar-indigo)"/>
-              <circle cx="273" cy="110" r="4" fill="#4f46e5" opacity="0.6"/>
-              <text x="262" y="118" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" fill="#4f46e5">&#x3B8;'&#x2082;</text>
-
-              <!-- Inner loop: theta -> T3 adapted -->
-              <path d="M212,132 Q218,155 220,168" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#ar-amber)"/>
-              <circle cx="221" cy="173" r="4" fill="#d97706" opacity="0.6"/>
-              <text x="232" y="170" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" fill="#d97706">&#x3B8;'&#x2083;</text>
-
-              <!-- Labels -->
-              <rect x="12" y="225" width="175" height="26" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
-              <text x="20" y="242" font-family="DM Sans,sans-serif" font-size="7" font-weight="600" fill="#64748b">PARAMETER SPACE</text>
-              <line x1="110" y1="238" x2="124" y2="238" stroke="#4f46e5" stroke-width="2"/>
-              <text x="128" y="241" font-family="DM Sans,sans-serif" font-size="6.5" fill="#64748b">inner loop (adapt)</text>
-
-              <!-- Annotation: "1 gradient step" -->
-              <rect x="290" y="225" width="118" height="26" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
-              <text x="298" y="237" font-family="DM Sans,sans-serif" font-size="7" fill="#64748b">&#x3B8; is updated so each</text>
-              <text x="298" y="247" font-family="DM Sans,sans-serif" font-size="7" font-weight="600" fill="#3730a3">&#x3B8;' adapts in 1 step</text>
-            </svg>
-          </div>
-
-          <div class="method-card-body">
-            <p>
-              A Cross-Encoder (MiniLM, 6 layers, pre-trained on MS MARCO) is meta-trained with MAML to learn an initialization that adapts quickly to new queries using only a handful of feedback documents. Training proceeds in two stages per batch:
-            </p>
-
-            <div class="eq-block">
-              <span class="eq">&theta;&prime; = &theta; &minus; &alpha; &nabla;<sub>&theta;</sub> &Lscr;(g<sub>&theta;</sub>; T<sub>1</sub>)</span>
-              <span class="eq-num">(2)</span>
+          <div class="method-card-body" style="display:flex;gap:24px;align-items:stretch">
+            <div style="flex:1;min-width:0;display:flex;align-items:center;background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:8px"><svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block"><rect width="420" height="260" rx="10" fill="#f8fafc"/><pattern id="d6" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="0.7" fill="#cbd5e1"/></pattern><rect width="420" height="260" rx="10" fill="url(#d6)"/><ellipse cx="210" cy="130" rx="180" ry="110" fill="none" stroke="#e2e8f0" stroke-width="1"/><ellipse cx="210" cy="130" rx="145" ry="88" fill="none" stroke="#e2e8f0" stroke-width="1"/><ellipse cx="210" cy="130" rx="110" ry="66" fill="none" stroke="#e2e8f0" stroke-width="1"/><ellipse cx="210" cy="130" rx="75" ry="44" fill="none" stroke="#cbd5e1" stroke-width="1"/><ellipse cx="210" cy="130" rx="40" ry="22" fill="none" stroke="#94a3b8" stroke-width="1"/><circle cx="155" cy="95" r="18" fill="#0d9488" opacity="0.06" stroke="#0d9488" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/><text x="155" y="75" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#0d9488">Task T&#x2081;</text><circle cx="275" cy="105" r="18" fill="#1e3a5f" opacity="0.06" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/><text x="275" y="85" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#1e3a5f">Task T&#x2082;</text><circle cx="220" cy="175" r="18" fill="#d97706" opacity="0.06" stroke="#d97706" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/><text x="220" y="199" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" font-weight="700" fill="#d97706">Task T&#x2083;</text><circle cx="210" cy="125" r="7" fill="#1e3a5f" stroke="#142a45" stroke-width="2"/><circle cx="210" cy="125" r="12" fill="none" stroke="#1e3a5f" stroke-width="1" opacity="0.2"/><text x="210" y="145" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="800" fill="#142a45">&#x3B8;</text><text x="210" y="155" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="600" fill="#64748b">MAML init</text><defs><marker id="at3" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0,0 6,2.5 0,5" fill="#0d9488"/></marker><marker id="ai3" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0,0 6,2.5 0,5" fill="#1e3a5f"/></marker><marker id="aa3" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0,0 6,2.5 0,5" fill="#d97706"/></marker></defs><path d="M204,120 Q180,100 163,102" fill="none" stroke="#0d9488" stroke-width="2" marker-end="url(#at3)"/><circle cx="158" cy="100" r="4" fill="#0d9488" opacity="0.6"/><text x="168" y="108" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" fill="#0d9488">&#x3B8;'&#x2081;</text><path d="M217,121 Q245,105 268,108" fill="none" stroke="#1e3a5f" stroke-width="2" marker-end="url(#ai3)"/><circle cx="273" cy="110" r="4" fill="#1e3a5f" opacity="0.6"/><text x="262" y="118" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" fill="#1e3a5f">&#x3B8;'&#x2082;</text><path d="M212,132 Q218,155 220,168" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#aa3)"/><circle cx="221" cy="173" r="4" fill="#d97706" opacity="0.6"/><text x="232" y="170" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" fill="#d97706">&#x3B8;'&#x2083;</text><rect x="12" y="225" width="175" height="26" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/><text x="20" y="242" font-family="DM Sans,sans-serif" font-size="7" font-weight="600" fill="#64748b">PARAMETER SPACE</text><line x1="110" y1="238" x2="124" y2="238" stroke="#1e3a5f" stroke-width="2"/><text x="128" y="241" font-family="DM Sans,sans-serif" font-size="6.5" fill="#64748b">inner loop (adapt)</text><rect x="290" y="225" width="118" height="26" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/><text x="298" y="237" font-family="DM Sans,sans-serif" font-size="7" fill="#64748b">&#x3B8; is updated so each</text><text x="298" y="247" font-family="DM Sans,sans-serif" font-size="7" font-weight="600" fill="#142a45">&#x3B8;' adapts in 1 step</text></svg></div>
+            <div style="flex:1;min-width:0">
+              <p>Meta-train a Cross-Encoder with MAML so it adapts to any new query in one gradient step using only the feedback docs.</p>
+              <div class="eq-block"><span class="eq">&theta;&prime; = &theta; &minus; &alpha; &nabla;<sub>&theta;</sub> &Lscr;(g<sub>&theta;</sub>; T<sub>1</sub>)</span><span class="eq-num">(2)</span></div>
+              <div class="eq-block"><span class="eq">&theta;&Prime; = &theta; &minus; &alpha; &nabla;<sub>&theta;</sub> &Lscr;(g<sub>&theta;&prime;</sub>; T<sub>2</sub>)</span><span class="eq-num">(3)</span></div>
+              <details class="method-details" open><summary>Key properties</summary><ul class="key-props"><li><i class="fa-solid fa-circle prop-icon blue"></i> <span>Only 0.11% of parameters updated (bias layers)</span></li><li><i class="fa-solid fa-circle prop-icon blue"></i> <span>+0.5 nDCG@20 over supervised pre-training</span></li><li><i class="fa-solid fa-circle prop-icon blue"></i> <span>Best overall: <strong>0.4973 avg. nDCG@20</strong> with BM25-QE fusion</span></li></ul></details>
             </div>
-
-            <p>
-              The model adapts to task T<sub>1</sub> (one query + its feedback docs) via an inner-loop gradient step. Then the <em>original</em> parameters &theta; are optimized so that the adapted model &theta;&prime; performs well on a held-out task T<sub>2</sub>:
-            </p>
-
-            <div class="eq-block">
-              <span class="eq">&theta;&Prime; = &theta; &minus; &alpha; &nabla;<sub>&theta;</sub> &Lscr;(g<sub>&theta;&prime;</sub>; T<sub>2</sub>)</span>
-              <span class="eq-num">(3)</span>
-            </div>
-
-            <div class="maml-pipeline">
-              <div class="maml-row">
-                <div class="maml-step"><div class="maml-step-inner ms-warn">MAML Pre-Train</div></div>
-                <div class="maml-arr"><i class="fa-solid fa-arrow-right"></i></div>
-                <div class="maml-step"><div class="maml-step-inner ms-proc">Per-Query FT</div></div>
-                <div class="maml-arr"><i class="fa-solid fa-arrow-right"></i></div>
-                <div class="maml-step"><div class="maml-step-inner ms-data">Adapted CE</div></div>
-                <div class="maml-arr"><i class="fa-solid fa-arrow-right"></i></div>
-                <div class="maml-step"><div class="maml-step-inner ms-out">Output</div></div>
-              </div>
-              <div class="maml-labels">
-                <div class="maml-label">Train queries</div>
-                <div class="maml-label">2<em>k</em> feedback</div>
-                <div class="maml-label">Bias only</div>
-                <div class="maml-label">Re-ranked</div>
-              </div>
-            </div>
-
-            <ul class="key-props">
-              <li><i class="fa-solid fa-circle prop-icon blue"></i> <span>Only bias layers are updated (0.11% of parameters) &mdash; keeps memory footprint tiny for storing per-query models</span></li>
-              <li><i class="fa-solid fa-circle prop-icon blue"></i> <span>MAML initialization outperforms standard supervised pre-training by +0.5 nDCG@20 and is more stable across varying <em>k</em></span></li>
-              <li><i class="fa-solid fa-circle prop-icon blue"></i> <span>Combined with BM25-QE via rank fusion, achieves the best overall result: <strong>0.4973 avg. nDCG@20</strong></span></li>
-            </ul>
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -1696,23 +1876,23 @@
     <div class="container">
       <div class="fade-up">
         <div class="section-label">What We Did</div>
-        <h2>Key Contributions</h2>
+        <h2>Key <span class="title-gradient">Contributions</span></h2>
       </div>
       <div class="contributions-grid">
         <div class="contribution-card fade-up stagger-1">
           <div class="card-icon purple"><i class="fa-solid fa-lightbulb"></i></div>
-          <h3>Few-Shot Learning Task</h3>
-          <p>A few-shot learning task for information retrieval that incorporates relevance feedback in both retrieval and re-ranking stages.</p>
+          <h3>Learn from Few Feedback Docs</h3>
+          <p>Fine-tune a re-ranker per query using only 4&ndash;16 feedback documents&mdash;no large labeled dataset required.</p>
         </div>
         <div class="contribution-card fade-up stagger-2">
-          <div class="card-icon teal"><i class="fa-solid fa-database"></i></div>
-          <h3>Dataset Transformation</h3>
-          <p>Transformation of four existing IR datasets into the few-shot retrieve &amp; re-rank setup with relevance feedback scenarios.</p>
+          <div class="card-icon teal"><i class="fa-solid fa-gauge-high"></i></div>
+          <h3>Speed vs. Accuracy Trade-Off</h3>
+          <p>kNN re-ranking needs no training and runs instantly from precomputed embeddings. CE MAML requires meta-learning but achieves the best performance.</p>
         </div>
         <div class="contribution-card fade-up stagger-3">
           <div class="card-icon amber"><i class="fa-solid fa-ranking-star"></i></div>
-          <h3>Novel Re-Ranking Methods</h3>
-          <p>kNN re-ranking, Cross-Encoder with MAML meta-learning, and per-query fine-tuning that directly incorporate relevance feedback.</p>
+          <h3>Outperforms All Baselines</h3>
+          <p>Fusing neural re-ranking with BM25 query expansion yields +5.2 nDCG@20 over the strongest individual method.</p>
         </div>
       </div>
     </div>
@@ -1723,65 +1903,50 @@
     <div class="container">
       <div class="fade-up">
         <div class="section-label">Evaluation</div>
-        <h2>Datasets</h2>
+        <h2><span class="title-gradient">Datasets</span></h2>
       </div>
-      <div class="datasets-grid">
-        <div class="dataset-card fade-up stagger-1">
-          <div class="dataset-name">Robust04</div>
-          <div class="dataset-domain">News</div>
-          <div class="dataset-stats">
-            <div class="dataset-stat">
-              <span class="stat-value">528k</span>
-              <span class="stat-label">Docs</span>
-            </div>
-            <div class="dataset-stat">
-              <span class="stat-value">148</span>
-              <span class="stat-label">Queries</span>
-            </div>
-          </div>
-        </div>
-        <div class="dataset-card fade-up stagger-2">
-          <div class="dataset-name">TREC-Covid</div>
-          <div class="dataset-domain">Biomedical</div>
-          <div class="dataset-stats">
-            <div class="dataset-stat">
-              <span class="stat-value">191k</span>
-              <span class="stat-label">Docs</span>
-            </div>
-            <div class="dataset-stat">
-              <span class="stat-value">50</span>
-              <span class="stat-label">Queries</span>
-            </div>
-          </div>
-        </div>
-        <div class="dataset-card fade-up stagger-3">
-          <div class="dataset-name">TREC-News</div>
-          <div class="dataset-domain">News</div>
-          <div class="dataset-stats">
-            <div class="dataset-stat">
-              <span class="stat-value">595k</span>
-              <span class="stat-label">Docs</span>
-            </div>
-            <div class="dataset-stat">
-              <span class="stat-value">34</span>
-              <span class="stat-label">Queries</span>
-            </div>
-          </div>
-        </div>
-        <div class="dataset-card fade-up stagger-4">
-          <div class="dataset-name">Webis-Touch&eacute;</div>
-          <div class="dataset-domain">Debates</div>
-          <div class="dataset-stats">
-            <div class="dataset-stat">
-              <span class="stat-value">383k</span>
-              <span class="stat-label">Docs</span>
-            </div>
-            <div class="dataset-stat">
-              <span class="stat-value">49</span>
-              <span class="stat-label">Queries</span>
-            </div>
-          </div>
-        </div>
+      <div class="table-wrapper fade-up stagger-1">
+        <table>
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Domain</th>
+              <th>Description</th>
+              <th>Docs</th>
+              <th>Queries</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Robust04</td>
+              <td>News</td>
+              <td style="white-space:normal;font-weight:400">News articles, complex topics</td>
+              <td>528k</td>
+              <td>148</td>
+            </tr>
+            <tr>
+              <td>TREC-Covid</td>
+              <td>Biomedical</td>
+              <td style="white-space:normal;font-weight:400">COVID-19 research paper retrieval from CORD-19</td>
+              <td>191k</td>
+              <td>50</td>
+            </tr>
+            <tr>
+              <td>TREC-News</td>
+              <td>News</td>
+              <td style="white-space:normal;font-weight:400">Washington Post background linking task</td>
+              <td>595k</td>
+              <td>34</td>
+            </tr>
+            <tr>
+              <td>Webis-Touch&eacute;</td>
+              <td>Debates</td>
+              <td style="white-space:normal;font-weight:400">Argument retrieval from web debates</td>
+              <td>383k</td>
+              <td>49</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -1791,9 +1956,18 @@
     <div class="container">
       <div class="fade-up">
         <div class="section-label">Performance</div>
-        <h2>Results</h2>
+        <h2><span class="title-gradient">Results</span></h2>
       </div>
-      <div class="table-wrapper fade-up stagger-1">
+
+      <div class="result-highlight fade-up stagger-1">
+        <div class="highlight-number">
+          <span class="big">+5.2</span>
+          <span class="small">nDCG@20</span>
+        </div>
+        <p>Our best model (<strong>Rank Fusion: CE MAML + Query FT &amp; BM25-QE</strong>) outperforms BM25 with query expansion by +5.2 nDCG@20 across four datasets by fusing neural re-ranking with relevance feedback.</p>
+      </div>
+
+      <div class="table-wrapper fade-up stagger-2">
         <table>
           <thead>
             <tr>
@@ -1807,7 +1981,7 @@
           </thead>
           <tbody>
             <tr>
-              <td>BM25-QE</td>
+              <td>BM25-QE<div class="method-pills"><span class="mpill mpill-bm25">BM25-QE</span></div></td>
               <td>0.4964</td>
               <td>0.6106</td>
               <td>0.3924</td>
@@ -1815,7 +1989,7 @@
               <td>0.4427</td>
             </tr>
             <tr>
-              <td>kNN</td>
+              <td>kNN<div class="method-pills"><span class="mpill mpill-knn">kNN</span></div></td>
               <td>0.4433</td>
               <td>0.6863</td>
               <td>0.3652</td>
@@ -1823,7 +1997,7 @@
               <td>0.4175</td>
             </tr>
             <tr>
-              <td>CE Zero-Shot</td>
+              <td>CE Zero-Shot<div class="method-pills"><span class="mpill mpill-ce">CE</span></div></td>
               <td>0.4152</td>
               <td>0.7028</td>
               <td>0.3143</td>
@@ -1831,7 +2005,7 @@
               <td>0.4022</td>
             </tr>
             <tr>
-              <td>CE Query-FT</td>
+              <td>CE Query-FT<div class="method-pills"><span class="mpill mpill-ce">CE</span><span class="mpill mpill-maml">Query FT</span></div></td>
               <td>0.4846</td>
               <td>0.7231</td>
               <td>0.3350</td>
@@ -1839,7 +2013,7 @@
               <td>0.4352</td>
             </tr>
             <tr>
-              <td>CE MAML + Query FT</td>
+              <td>CE MAML + Query FT<div class="method-pills"><span class="mpill mpill-ce">CE</span><span class="mpill mpill-maml">MAML</span><span class="mpill mpill-maml">Query FT</span></div></td>
               <td>0.5060</td>
               <td>0.7359</td>
               <td>0.3147</td>
@@ -1847,33 +2021,26 @@
               <td>0.4450</td>
             </tr>
             <tr>
-              <td>RF: kNN &amp; BM25-QE</td>
+              <td>RF: kNN &amp; BM25-QE<div class="method-pills"><span class="mpill mpill-knn">kNN</span><span class="mpill mpill-bm25">BM25-QE</span><span class="mpill mpill-rf">Fusion</span></div></td>
               <td>0.5076</td>
               <td>0.7077</td>
-              <td>0.4123</td>
+              <td><strong>0.4123</strong></td>
               <td>0.2482</td>
               <td>0.4689</td>
             </tr>
             <tr class="best-row">
-              <td>RF: CE MAML + QFT &amp; BM25-QE</td>
+              <td>RF: CE MAML + QFT &amp; BM25-QE<div class="method-pills"><span class="mpill mpill-ce">CE</span><span class="mpill mpill-maml">MAML</span><span class="mpill mpill-bm25">BM25-QE</span><span class="mpill mpill-rf">Fusion</span></div></td>
               <td><strong>0.5707</strong></td>
               <td><strong>0.7402</strong></td>
-              <td><strong>0.4055</strong></td>
+              <td>0.4055</td>
               <td><strong>0.2727</strong></td>
               <td><strong>0.4973</strong></td>
+
             </tr>
           </tbody>
         </table>
       </div>
-      <p class="table-note">nDCG@20 test set results averaged over three seeds and feedback documents <em>k</em> &isin; {2, 4, 8}. Best results in <strong>bold</strong>. RF = Rank Fusion, QFT = Query Fine-Tuning.</p>
-
-      <div class="result-highlight fade-up stagger-2">
-        <div class="highlight-number">
-          <span class="big">+5.2</span>
-          <span class="small">nDCG@20</span>
-        </div>
-        <p>Our best model (<strong>Rank Fusion: CE MAML + Query FT &amp; BM25-QE</strong>) outperforms all other methods, demonstrating that fusing neural re-ranking with lexical retrieval and relevance feedback is highly effective.</p>
-      </div>
+      <p class="table-note">nDCG@20 test set results averaged over three seeds and feedback documents <em>k</em> &isin; {2, 4, 8}. Best per column in <strong>bold</strong>. RF = Rank Fusion, QFT = Query Fine-Tuning.</p>
     </div>
   </section>
 
@@ -1882,16 +2049,21 @@
     <div class="container">
       <div class="fade-up">
         <div class="section-label">Reference</div>
-        <h2>Citation</h2>
+        <h2><span class="title-gradient">Citation</span></h2>
       </div>
       <p class="cite-intro fade-up stagger-1">If you find this work useful, please cite our paper:</p>
       <div class="bibtex-wrapper fade-up stagger-1">
+        <div class="bibtex-header">
+          <span class="code-dot red"></span>
+          <span class="code-dot yellow"></span>
+          <span class="code-dot green"></span>
+        </div>
         <button class="copy-btn" id="copy-btn" onclick="copyBibtex()">
           <i class="fa-regular fa-copy"></i> Copy
         </button>
         <pre><code id="bibtex">@inproceedings{baumgartner-etal-2022-incorporating,
-    title = "Incorporating Relevance Feedback for Information-Seeking
-             Retrieval using Few-Shot Document Re-Ranking",
+    title = "{{Incorporating Relevance Feedback for Information-Seeking
+             Retrieval using Few-Shot Document Re-Ranking}}",
     author = {Baumg{\"a}rtner, Tim  and
       Ribeiro, Leonardo F. R.  and
       Reimers, Nils  and
@@ -1909,12 +2081,24 @@
     </div>
   </section>
 
+  <!-- Slide Controls -->
+  <div class="slide-controls" id="slideControls">
+    <button class="slide-nav-btn" onclick="slideNav(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="slide-progress" id="slideProgress"></div>
+    <button class="slide-nav-btn" onclick="slideNav(1)"><i class="fa-solid fa-chevron-right"></i></button>
+    <button class="slide-nav-btn" onclick="slideFontSize(-1)"><i class="fa-solid fa-minus"></i></button>
+    <button class="slide-nav-btn" onclick="slideFontSize(1)"><i class="fa-solid fa-plus"></i></button>
+    <button class="slide-nav-btn slide-exit-btn" onclick="toggleSlideMode()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0})"><i class="fa-solid fa-arrow-up"></i></button>
+
   <!-- Footer -->
   <footer>
     <div class="container">
       <div class="footer-links">
         <a href="mailto:baumgaertner.t@gmail.com"><i class="fa-solid fa-envelope"></i> Contact</a>
-        <a href="https://bsky.app/profile/timbmg.bsky.social" target="_blank" rel="noopener"><i class="fa-brands fa-bluesky"></i> Bluesky</a>
+        <a href="https://bsky.app/profile/timbmg.bsky.social" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 568 501" fill="currentColor" style="vertical-align:-2px;margin-right:2px"><path d="M123.121 33.664C188.241 82.553 258.281 181.68 284 234.873c25.719-53.192 95.759-152.32 160.879-201.21C491.866-1.611 568-28.906 568 57.947c0 17.346-9.945 145.713-15.778 166.555-20.275 72.453-94.155 90.933-159.875 79.748C507.222 323.8 536.444 388.56 473.333 453.32c-119.86 122.992-172.272-30.859-185.702-70.281-2.462-7.227-3.614-10.608-3.631-7.733-.017-2.875-1.169.506-3.631 7.733-13.43 39.422-65.842 193.273-185.702 70.281-63.111-64.76-33.889-129.52 80.986-149.071-65.72 11.185-139.6-7.295-159.875-79.748C9.945 203.659 0 75.291 0 57.946 0-28.906 76.135-1.612 123.121 33.664z"/></svg> Bluesky</a>
         <a href="http://www.ukp.tu-darmstadt.de/" target="_blank" rel="noopener"><i class="fa-solid fa-building-columns"></i> UKP Lab</a>
         <a href="http://www.tu-darmstadt.de/" target="_blank" rel="noopener"><i class="fa-solid fa-graduation-cap"></i> TU Darmstadt</a>
       </div>
@@ -1924,6 +2108,51 @@
   </footer>
 
   <script>
+    // Abstract toggle
+    function toggleAbstract() {
+      var full = document.getElementById('abstract-full');
+      var btn = document.getElementById('abstract-toggle');
+      if (full.classList.contains('show')) {
+        full.classList.remove('show');
+        btn.innerHTML = '<i class="fa-solid fa-chevron-down" style="font-size:0.7rem;margin-right:4px"></i> Full abstract';
+      } else {
+        full.classList.add('show');
+        btn.innerHTML = '<i class="fa-solid fa-chevron-up" style="font-size:0.7rem;margin-right:4px"></i> Hide full abstract';
+      }
+    }
+
+    // Navbar scroll shadow + active section highlight
+    var navLinks = document.querySelectorAll('.topnav-links a');
+    var sections = [];
+    navLinks.forEach(function(link) {
+      var id = link.getAttribute('href').replace('#', '');
+      var el = document.getElementById(id);
+      if (el) sections.push({ id: id, el: el, link: link });
+    });
+
+    window.addEventListener('scroll', function() {
+      var nav = document.getElementById('topnav');
+      if (window.scrollY > 20) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+
+      // Scroll-to-top button
+      var stb = document.getElementById('scrollTop');
+      if (window.scrollY > 400) { stb.classList.add('visible'); }
+      else { stb.classList.remove('visible'); }
+
+      // Active section
+      var scrollPos = window.scrollY + 100;
+      var active = null;
+      sections.forEach(function(s) {
+        if (s.el.offsetTop <= scrollPos) active = s;
+      });
+      navLinks.forEach(function(l) { l.classList.remove('nav-active'); });
+      if (active) active.link.classList.add('nav-active');
+    });
+
     // Copy BibTeX
     function copyBibtex() {
       var bibtex = document.getElementById('bibtex').textContent;
@@ -1949,6 +2178,101 @@
 
     document.querySelectorAll('.fade-up').forEach(function(el) {
       observer.observe(el);
+    });
+
+    // ==================== SLIDE MODE ====================
+    var slideModeActive = false;
+    var currentSlide = 0;
+    var savedScrollY = 0;
+    var slideZoom = 1;
+
+    function getSlides() {
+      var hero = document.querySelector('section.hero');
+      var links = document.querySelector('section.links');
+      var allSections = document.querySelectorAll('section.section, section.section-alt');
+      var slides = [{ elements: [hero, links], label: 'title' }];
+      allSections.forEach(function(sec) { slides.push({ elements: [sec], label: sec.id || 'section' }); });
+      return slides;
+    }
+
+    function toggleSlideMode() {
+      slideModeActive = !slideModeActive;
+      var slides = getSlides();
+      if (slideModeActive) {
+        savedScrollY = window.scrollY;
+        currentSlide = 0;
+        document.body.classList.add('slide-mode');
+        document.querySelector('.slide-toggle-label').textContent = 'Website';
+        document.querySelector('#slideToggle i').className = 'fa-solid fa-globe';
+        var slideLabels = ['Title','TL;DR','Overview','Methods','Contributions','Datasets','Results','Citation'];
+        var prog = document.getElementById('slideProgress');
+        prog.innerHTML = '';
+        slides.forEach(function(s, i) {
+          var dot = document.createElement('div');
+          dot.className = 'slide-dot' + (i === 0 ? ' dot-active' : '');
+          dot.onclick = (function(idx) { return function() { showSlide(idx, idx > currentSlide ? 'left' : 'right'); }; })(i);
+          var tip = document.createElement('div');
+          tip.className = 'slide-dot-tip';
+          tip.textContent = slideLabels[i] || s.label;
+          dot.appendChild(tip);
+          prog.appendChild(dot);
+        });
+        showSlide(currentSlide, 'none');
+      } else {
+        document.body.classList.remove('slide-mode');
+        document.querySelector('.slide-toggle-label').textContent = 'Slides';
+        document.querySelector('#slideToggle i').className = 'fa-solid fa-display';
+        slides.forEach(function(s) { s.elements.forEach(function(el) {
+          el.classList.remove('slide-active', 'slide-exit-left', 'slide-exit-right');
+          el.style.zoom = '';
+        }); });
+        slideZoom = 1;
+        window.scrollTo(0, savedScrollY);
+      }
+    }
+
+    function showSlide(index, direction) {
+      var slides = getSlides();
+      if (index < 0 || index >= slides.length) return;
+      if (direction === 'left' || direction === 'right') {
+        slides[currentSlide].elements.forEach(function(el) {
+          el.classList.remove('slide-active');
+          el.classList.add(direction === 'left' ? 'slide-exit-left' : 'slide-exit-right');
+        });
+      }
+      currentSlide = index;
+      requestAnimationFrame(function() {
+        slides.forEach(function(s) { s.elements.forEach(function(el) { el.classList.remove('slide-active', 'slide-exit-left', 'slide-exit-right'); }); });
+        slides[currentSlide].elements.forEach(function(el) { el.classList.add('slide-active'); el.scrollTop = 0; });
+      });
+      document.querySelectorAll('.slide-dot').forEach(function(dot, i) { dot.classList.toggle('dot-active', i === currentSlide); });
+    }
+
+    function slideNav(delta) {
+      var newIndex = currentSlide + delta;
+      if (newIndex < 0 || newIndex >= getSlides().length) return;
+      showSlide(newIndex, delta > 0 ? 'left' : 'right');
+    }
+
+    function slideFontSize(delta) {
+      slideZoom = Math.max(0.7, Math.min(1.5, slideZoom + delta * 0.1));
+      document.querySelectorAll('section.section, section.section-alt').forEach(function(el) { el.style.zoom = slideZoom; });
+      var hero = document.querySelector('section.hero');
+      var links = document.querySelector('section.links');
+      if (hero) { hero.style.transform = slideZoom === 1 ? '' : 'scale(' + slideZoom + ')'; hero.style.transformOrigin = 'center 45%'; }
+      if (links) { links.style.transform = slideZoom === 1 ? '' : 'scale(' + slideZoom + ')'; links.style.transformOrigin = 'center top'; }
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (!slideModeActive) return;
+      switch (e.key) {
+        case 'ArrowRight': case 'ArrowDown': case ' ':
+          e.preventDefault(); slideNav(1); break;
+        case 'ArrowLeft': case 'ArrowUp':
+          e.preventDefault(); slideNav(-1); break;
+        case 'Escape':
+          e.preventDefault(); toggleSlideMode(); break;
+      }
     });
   </script>
 
